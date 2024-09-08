@@ -1,0 +1,61 @@
+{% include "frontend/layout.html" %}
+{% load static %}
+
+{%block content%}
+
+<style>
+
+.header{
+ text-align: center;
+ margin-top: 20px;
+}
+
+.container{
+ margin-top: 30px;
+}
+
+.list{
+ text-align: center;
+}
+
+</style>
+
+<div class="header">
+    <h1>Desired Result</h1>
+</div>
+
+<div class="container">
+    <div class="list">
+        <a type="button" class="btn btn-success" href="detailgoal/" style="width: 400px;height: 50px;"><h4>Ketogenic Diet</h4></a>
+    </div>
+    <br>
+    <div class="list">
+        <a type="button" class="btn btn-success" href="detailgoal/" style="width: 400px;height: 50px;"><h4>Atkins Diet</h4></a>
+    </div>
+    <br>
+    <div class="list">
+        <a type="button" class="btn btn-success" href="detailgoal/" style="width: 400px;height: 50px;"><h4>Paleo Diet</h4></a>
+    </div> 
+    <br>
+    <div class="list">
+        <a type="button" class="btn btn-success" href="detailgoal/" style="width: 400px;height: 50px;"><h4>Intermittent Fasting (IF)</h4></a>
+    </div> 
+    <br>
+    <div class="list">
+        <a type="button" class="btn btn-success" href="detailgoal/" style="width: 400px;height: 50px;"><h4>Basal Metabolic Rate (BMR)</h4></a>
+    </div> 
+    <br>
+    <div class="list">
+        <a type="button" class="btn btn-success" href="detailgoal/" style="width: 400px;height: 50px;"><h4>The Mediterranean Diet</h4></a>
+    </div> 
+    <br>
+    <div class="list">
+        <a type="button" class="btn btn-success" href="detailgoal/" style="width: 400px;height: 50px;"><h4>Custom Diet</h4></a>
+    </div> 
+
+</div>
+
+
+
+
+{% endblock %}

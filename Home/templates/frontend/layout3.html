@@ -1,0 +1,268 @@
+{% load static %}
+<html>
+<head>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- ------------------------------ -->
+<meta charset="UTF-8">
+<link rel="stylesheet" href="styles.css">
+<script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+	<script>
+		$(document).ready(function(){
+			$(".notification_icon .fa-bell").click(function(){
+				$(".dropdown").toggleClass("active");
+			})
+		});
+	</script>
+  <!-- ------------------------------------------ -->
+<style>
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.navbar {
+  overflow: hidden;
+  background-color: #333;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  border-top-right-radius: 25px;
+  border-top-left-radius: 25px;
+}
+
+.navbar a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 15px 15px;
+  text-decoration: none;
+  font-size: 25px;
+}
+
+.navbar a:hover {
+  background: #f1f1f1;
+  color: black;
+}
+
+.navbar .search-container {
+  width: 100%;
+  background-color: #4c4b4b;
+  text-align: center;
+}
+
+.navbar input[type=text] {
+  padding: 6px;
+  margin-top: 8px;
+  font-size: 17px;
+  border: none;
+  
+}
+
+.navbar .search-container button {
+  padding: 10px 10px;
+  margin-top: 8px;
+  background: #ddd;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+}
+
+.navbar .search-container button:hover {
+  background: #ccc;
+}
+
+.topnav {
+  overflow: hidden;
+  background-color: #4c4b4b;
+}
+
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  width: 50%;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+/* ------------------------- */
+
+.notification_wrap{
+	/* margin: 0px auto 0; */
+  text-align: center;
+}
+
+.notification_wrap .notification_icon{
+	position: relative;
+	width: 50px;
+	height: 50px;
+	font-size: 32px;
+	margin: 0 auto;
+	text-align: center;
+	/* color: #605dff; */
+  color: #000000;
+  padding: 12px 15px;
+}
+
+.notification_wrap .notification_icon:hover{
+  color: #605dff;
+}
+
+.notification_wrap .notification_icon .fa-bell{
+	cursor: pointer;
+}
+
+.notification_wrap .dropdown{
+	width: 350px;
+	height: auto;
+	background: #fff;
+	border-radius: 5px;
+	box-shadow: 2px 2px 3px rgba(0,0,0,0.125);
+	margin: 15px auto 0;
+	padding: 15px;
+	position: absolute;
+	display: none;
+  
+}
+
+.notification_wrap .dropdown .notify_item{
+	display: flex;
+	align-items: center;
+	padding: 10px 0;
+	border-bottom: 1px solid #dbdaff;
+}
+
+.notification_wrap .dropdown .notify_item:last-child{
+	border-bottom: 0px;
+}
+
+.notification_wrap .dropdown .notify_item .notify_img{
+	margin-right: 15px;
+}
+
+.notification_wrap .dropdown .notify_item .notify_info p{
+	margin-bottom: 5px;
+}
+
+.notification_wrap .dropdown .notify_item .notify_info p span{
+	color: #605dff;
+	margin-left: 5px;
+}
+
+.notification_wrap .dropdown .notify_item .notify_info .notify_time{
+	color: #c5c5e6;
+	font-size: 12px;
+}
+
+.notification_wrap .dropdown:before{
+	content: "";
+	position: absolute;
+	top: -30px;
+	left: 50%;
+	transform: translateX(-50%);
+	border: 15px solid;
+	border-color: transparent transparent #fff transparent;
+}
+
+.notification_wrap .dropdown.active{
+	display: block;
+}
+/* ---------------------- */
+</style>
+</head>
+<body>
+    <div class="topnav">
+      <div class="row">
+        <div class="col-6 flex-column">
+          <a href="/" style="width: 100%;"><img src="{% static '/images/return.png' %}" alt="back" width="30px" height="30px"></a>
+        </div>
+
+        <div class="col-6 flex-column">
+          <div class="wrapper">
+            <div class="notification_wrap">
+              <div class="notification_icon">
+                <i class="fas fa-bell"></i>
+              </div>
+              <div class="dropdown">
+                <div class="notify_item">
+                  <div class="notify_img">
+                    <img src="{% static '/images/usercat.png' %}" alt="profile_pic" style="width: 50px">
+                  </div>
+                  <div class="notify_info">
+                    <p>Alex commented on<span>Timeline Share</span></p>
+                    <span class="notify_time">10 minutes ago</span>
+                  </div>
+                </div>
+                <div class="notify_item">
+                  <div class="notify_img">
+                    <img src="{% static '/images/kinglogo.png' %}" alt="profile_pic" style="width: 50px">
+                  </div>
+                  <div class="notify_info">
+                    <p>Ben hur commented on your<span>Timeline Share</span></p>
+                    <span class="notify_time">55 minutes ago</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <div class="navbar" style="padding-top: 0px;padding-bottom: 0px;">
+    <!-- <a href="#" class="active">Home</a> -->
+    <div class="search-container">
+      <form action="/">
+        <div class="barcode-container">
+        <a href="/"><img src="{% static '/images/barcodelogo.png' %}" alt="barcodelogo" width="30px" height="30px"></a>
+        </div>
+        <input type="text" placeholder="Search.." name="search">
+        <button type="submit"><i class="fa fa-search"></i></button>
+      </form>
+    </div>
+  {% if request.user.is_authenticated %}
+    {% if request.user.is_superuser %}
+    <a href="/">Home</a>
+    <a href="{% url 'goal' %}">Goal</a>
+    <a href="{% url 'diary' %}">Diary</a>
+    <a href="{% url 'feed' %}">Feed</a>
+    <a href="{% url 'admin:index' %}">Admin</a>
+    <a href="{% url 'logout' %}">Log out</a>
+    {% endif %}
+    {% if request.user.person.cost == 'Gold' %}
+    <a href="/">Home</a>
+    <a href="{% url 'goal' %}">Goal</a>
+    <a href="{% url 'diary' %}">Diary</a>
+    <a href="{% url 'feed' %}">Feed</a>
+    <a href="{% url 'logout' %}">Log out</a>
+    {% endif %}
+    {% if request.user.person.cost == 'Normal' %}
+    <a href="/">Home</a>
+    <a href="{% url 'goal' %}">Goal</a>
+    <a href="{% url 'diary' %}">Diary</a>
+    <a href="{% url 'feed' %}">Feed</a>
+    <a href="{% url 'logout' %}">Log out</a>
+    {% endif %}
+  {% else %}
+  <a href="{% url 'login' %}">Log in</a>
+  {% endif %}
+  </div>
+      
+      <!-- <div class="main">
+        <h1>Bottom Navigation Bar</h1>
+        <p>Some text some text some text.</p>
+      </div> -->
+      
+
+</body>
+</html>

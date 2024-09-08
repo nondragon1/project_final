@@ -1,0 +1,130 @@
+{% extends "frontend/layout2.html" %}
+{% load static %}
+{%block content%}
+
+<style>
+
+.recomment-bar{
+ text-align: center;
+}
+
+h2{
+ margin-top: 20px;
+}
+
+.container-recomment{
+ border: 5px solid black;
+ border-radius: 20px;
+ width: 50%;
+ margin: 0 auto;
+}
+
+.category-food{
+ text-align: center;
+}
+
+.container-menu{
+ border: 5px solid black;
+ border-radius: 20px;
+ width: 50%;
+ margin: 0 auto;
+ padding: 10px;
+}
+
+
+</style>
+
+<div class="recomment-bar">
+    <div class="header-recomment">
+        <h2>RECOMMEND</h2>
+    </div>
+    <div class="bar1">
+    <div class="container-recomment">
+        <div class="row">
+        <div class="col-4 flex-column">
+            <div class="card-info">
+                <a href="detailfood/"><img src="{% static '/images/food-recomment1.jpg' %}" alt="recomment-food" width="100px" height="100px" style="border-radius: 20px;margin: 20px;"></a>
+                <p>tom yum kung</p>
+            </div>
+        </div>
+
+        <div class="col-4 flex-column">
+            <div class="card-info">
+                <a href="detailfood/"><img src="{% static '/images/food-recomment2.jpg' %}" alt="recomment-food" width="100px" height="100px" style="border-radius: 20px;margin: 20px;"></a>
+                <p>tuna salad</p>
+            </div>
+        </div>
+
+        <div class="col-4 flex-column">
+            <div class="card-info">
+                <a href="detailfood/"><img src="{% static '/images/food-recomment3.jpg' %}" alt="recomment-food" width="100px" height="100px" style="border-radius: 20px;margin: 20px;"></a>
+                <p>suki pork</p>
+            </div>
+        </div>
+
+        </div>    
+    </div>
+    </div>
+</div>
+
+<div class="category-food">
+    <div class="header-menu">
+        <h2>CATEGORY</h2>
+    </div>
+    <div class="container-menu">
+        <div class="row">
+            <div class="col-4 flex-column">
+                <a type="button" class="btn btn-dark" href="/" style="width: 160px;height: 40px;"><h7>noodles</h7></a>
+            </div>
+
+            <div class="col-4 flex-column">
+                <a type="button" class="btn btn-dark" href="/" style="width: 160px;height: 40px;"><h7>sweet food</h7></a>
+            </div>
+
+            <div class="col-4 flex-column">
+                <a type="button" class="btn btn-dark" href="/" style="width: 160px;height: 40px;"><h7>drink</h7></a>
+            </div> 
+
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-4 flex-column">
+                <a type="button" class="btn btn-dark" href="/" style="width: 160px;height: 40px;"><h7>fast food</h7></a>
+            </div>
+
+            <div class="col-4 flex-column">
+                <a type="button" class="btn btn-dark" href="/" style="width: 160px;height: 40px;"><h7>steak</h7></a>
+            </div>
+
+            <div class="col-4 flex-column">
+                <a type="button" class="btn btn-dark" href="/" style="width: 160px;height: 40px;"><h7>snacks food</h7></a>
+            </div>
+
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-4 flex-column">
+                <a type="button" class="btn btn-dark" href="/" style="width: 160px;height: 40px;"><h7>Clean food</h7></a>
+            </div>
+
+            <div class="col-4 flex-column">
+                <a type="button" class="btn btn-dark" href="/" style="width: 160px;height: 40px;"><h7>One dish meal</h7></a>
+            </div>
+
+            <div class="col-4 flex-column">
+                <a type="button" class="btn btn-dark" href="/" style="width: 160px;height: 40px;"><h7>Vegetarian food</h7></a>
+            </div>
+
+        </div>
+        <br>
+    </div>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+{% endblock %}

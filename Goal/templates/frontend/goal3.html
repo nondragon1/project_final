@@ -1,0 +1,108 @@
+{% include "frontend/layout.html" %}
+{% load static %}
+
+{%block content%}
+
+<style>
+
+.header{
+ text-align: center;
+ margin-top: 20px;
+}
+
+.header2{
+ border: 5px solid black;
+ border-radius: 20px;
+ margin: 0 auto;
+ width: 50%;
+}
+
+.container{
+ margin-top: 30px;
+ text-align: center;
+}
+
+img[alt="model-fat"] {
+ border: 5px solid black;
+}
+
+img[alt="model-fat"]:hover{
+ border-color: #e9fb44;
+}
+
+.enter{
+ text-align: center;
+}
+
+</style>
+
+<div class="header">
+    <h1>Desired Result</h1>
+    <div class="header2">
+        <h2>Ketogenic Diet (Select Fat)</h2>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-4 flex-column">
+            <a href="{% url 'aftergoal' %}"><img src="{% static '/images/body-fat1.jpg' %}" alt="model-fat" style="width: 300px ; height: 300px;"></a>
+        </div>
+
+        <div class="col-4 flex-column">
+            <a href="{% url 'aftergoal' %}"><img src="{% static '/images/body-fat2.jpg' %}" alt="model-fat" style="width: 300px ; height: 300px;"></a>
+        </div>
+
+        <div class="col-4 flex-column">
+            <a href="{% url 'aftergoal' %}"><img src="{% static '/images/body-fat3.jpg' %}" alt="model-fat" style="width: 300px ; height: 300px;"></a>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-4 flex-column">
+            <a href="{% url 'aftergoal' %}"><img src="{% static '/images/body-fat4.jpg' %}" alt="model-fat" style="width: 300px ; height: 300px;"></a>
+        </div>
+
+        <div class="col-4 flex-column">
+            <a href="{% url 'aftergoal' %}"><img src="{% static '/images/body-fat5.jpg' %}" alt="model-fat" style="width: 300px ; height: 300px;"></a>
+        </div>
+
+        <div class="col-4 flex-column">
+            <a href="{% url 'aftergoal' %}"><img src="{% static '/images/body-fat6.jpg' %}" alt="model-fat" style="width: 300px ; height: 300px;"></a>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-4 flex-column">
+            <a href="{% url 'aftergoal' %}"><img src="{% static '/images/body-fat7.jpg' %}" alt="model-fat" style="width: 300px ; height: 300px;"></a>
+        </div>
+
+        <div class="col-4 flex-column">
+            <a href="{% url 'aftergoal' %}"><img src="{% static '/images/body-fat8.jpg' %}" alt="model-fat" style="width: 300px ; height: 300px;"></a>
+        </div>
+
+        <div class="col-4 flex-column">
+            <a href="{% url 'aftergoal' %}"><img src="{% static '/images/body-fat9.jpg' %}" alt="model-fat" style="width: 300px ; height: 300px;"></a>
+        </div>
+    </div>
+
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="row">
+    <div class="enter">
+        <a type="button" class="btn btn-secondary" href="{% url 'detailgoal' %}" style="width: 400px;height: 50px;"><h4>return</h4></a>
+    </div>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+{% endblock %}
