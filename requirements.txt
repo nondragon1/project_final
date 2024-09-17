@@ -23,7 +23,9 @@ cycler==0.12.1
 cymem==2.0.8
 debugpy==1.8.1
 decorator==5.1.1
+dj-database-url==2.2.0
 Django==4.2.2
+django-heroku==0.3.1
 djangorestframework==3.15.2
 executing==2.0.1
 fastai==2.7.14
@@ -44,6 +46,7 @@ google-auth-httplib2==0.2.0
 google-pasta==0.2.0
 googleapis-common-protos==1.63.0
 grpcio==1.65.2
+gunicorn==23.0.0
 h11==0.14.0
 h5py==3.11.0
 httplib2==0.22.0
@@ -94,6 +97,7 @@ prompt-toolkit==3.0.43
 proto-plus==1.23.0
 protobuf==4.25.3
 psutil==5.9.8
+psycopg2==2.9.9
 pure-eval==0.2.2
 pyasn1==0.6.0
 pyasn1_modules==0.4.0
@@ -105,6 +109,7 @@ pyngrok==7.1.5
 pyparsing==3.1.2
 pythainlp==5.0.4
 python-dateutil==2.9.0.post0
+python-decouple==3.8
 python-dotenv==1.0.1
 python-multipart==0.0.9
 pytz==2024.1
@@ -154,7 +159,6 @@ wcwidth==0.2.13
 weasel==0.3.4
 websockets==12.0
 Werkzeug==3.0.3
+whitenoise==6.7.0
 widgetsnbextension==4.0.10
 wrapt==1.16.0
-setuptools>=67.0
-wheel>=0.40.0
