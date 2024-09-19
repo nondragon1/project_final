@@ -38,7 +38,8 @@ Flask==3.0.3
 flatbuffers==24.3.25
 fonttools==4.49.0
 fsspec==2024.2.0
-gast==0.6.0
+# gast==0.6.0
+gast==0.4.0
 google-api-core==2.18.0
 google-api-python-client==2.124.0
 google-auth==2.29.0
