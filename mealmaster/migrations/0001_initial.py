@@ -15,9 +15,18 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='person',
+            name='adminModel',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('user', models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('name', models.CharField(blank=True, max_length=255)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='customer',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('user', models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
                 ('name', models.CharField(blank=True, max_length=255)),
                 ('weight', models.CharField(blank=True, max_length=4)),
                 ('height', models.CharField(blank=True, max_length=4)),
@@ -26,7 +35,6 @@ class Migration(migrations.Migration):
                 ('phone', models.CharField(blank=True, max_length=20)),
                 ('cost', models.CharField(blank=True, max_length=50)),
                 ('image', models.ImageField(blank=True, upload_to='AppImages')),
-                ('user', models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]

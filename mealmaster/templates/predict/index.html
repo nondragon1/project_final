@@ -1,0 +1,169 @@
+{% extends "home/layout2.html" %}
+{% load static %}
+{%block content%}
+<style>
+    .content-predict {
+        overflow: auto;
+        height: calc(100% - 153px - 3rem);
+        padding-bottom: 130px;
+    }
+</style>
+<section class="mt-5 content-predict">
+    <form id="from-predict" class="container d-flex flex-column">
+        {% csrf_token %}
+        <label id="bt-add-predict" class="d-flex justify-content-center">
+            <a class="btn btn-dark">Click to scan image</a>
+            <input hidden name="image-progress" id="imageInput" type="file"/>
+        </label>
+        <div 
+            class="mt-2" 
+            id="imagePreview" 
+            style="display: none;"
+        >
+            <div class="preview-progress d-flex justify-content-center align-items-center">
+                <img src="#" alt="Image Preview" style="max-width: 200px; width: 70%;">
+            </div>
+            {% if request.user.customer.cost == 'Normal' %}
+                <div id="button-submit-image" style="display: none;">
+                    <button class="btn btn-success" name="submit-image">บันทึกรูปภาพ</button>
+                </div>
+            {% endif %}
+        </div>
+    </form>
+    <div class="p-5 d-flex justify-content-center align-item-center">
+        <div id="from-menu-selecteds" class="row justify-content-center"></div>
+    </div>
+</section>
+
+{% if request.user.customer.cost == 'Gold' %}
+    <script>
+        var stateButton = true
+
+        function ChangeStateButton(state) {
+            const button = document.querySelector("#bt-add-predict")
+            const input = button.querySelector("input")
+            switch(state) {
+                case "on" :
+                    Swal.close();
+                    input.disabled = false
+                    stateButton = true
+                    break;
+                case "off" :
+                    Swal.fire({
+                        title: 'กำลังตรวจสอบอาหาร',
+                        text: 'กรุณารอสักครู่...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    input.disabled = true
+                    stateButton = false
+                    break;
+            }
+        }
+
+        function submit() {
+            const from = document.getElementById("from-predict")
+            const fromData = new FormData(from)
+
+            fetch('/predict/menu', {
+                method: 'POST',
+                body: fromData,
+            }).then(async (response) => ({
+                data : await response.json(),
+                status : response.status
+            }))
+            .then(data => {
+                ChangeStateButton("on")
+                const { status , data : { menus } } = data
+                switch(status) {
+                    case 200 :
+                        const content_from_menus = document.getElementById("from-menu-selecteds")
+                        let content = ""
+                        menus.forEach(({ id , name , url_resource }) => {
+                            content += `
+                                <form class="card col-12 col-sm-6 col-lg-3 col-xl-2 m-1" onsubmit="return selected(this);">
+                                    {% csrf_token %}
+                                    <img class="card-img-top" style="aspect-ratio: 600 / 600;width: 100%;" src="${url_resource}" alt="${name}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${name}</h5>
+                                        <input placeholder="Number of bowls" type="number" required name="number" class="form-control"/>
+                                        <input hidden name="menu_id" value="${id}"/>
+                                        <button class="btn btn-dark mt-2 w-100">Select</button>
+                                    </div>
+                                </form>
+                            `
+                        })
+                        content_from_menus.innerHTML = content
+                        break;
+                    default:
+                        break;
+                }
+                // จัดการกับ response จากเซิร์ฟเวอร์
+            }).catch(error => {
+            });
+        }
+    </script>
+{% endif %}
+{% if request.user.customer.cost == 'Normal' %}
+    
+{% endif %}
+
+<script>
+
+    function selected(target) {
+        Swal.fire({
+            title: 'กำลังประมวลผล',
+            text: 'กรุณารอสักครู่...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        const formData = new FormData(target)
+        fetch('/predict/select', {
+            method: 'POST',
+            body: formData,
+        })
+            .then(async (response) => ({
+                data : await response.json(),
+                status : response.status
+            }))
+            .then(data => {
+                const { status , data : { title , status : status_swal } } = data
+
+                Swal.close();
+                
+                Swal.fire({
+                    title: title,
+                    timer: 3000,
+                    text: status === 200 ? 'คุณกินอาหารแล้ว' : "อาหารยังไม่กิน",
+                    icon: status_swal,
+                })
+
+                target.querySelector("input[name='number']").value = ""
+            })
+        return false
+    }
+
+    document.getElementById('imageInput').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const previewImage = document.getElementById('imagePreview');
+                previewImage.querySelector("img").src = e.target.result;
+                previewImage.style.display = 'block'
+                submit()
+                ChangeStateButton("off")
+            }
+            reader.readAsDataURL(file)
+
+            const buttonSubmit = document.getElementById("button-submit-image")
+            if(buttonSubmit) buttonSubmit.style.display = "block"
+        }
+    });
+</script>
+{% endblock %}

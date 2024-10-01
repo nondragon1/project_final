@@ -210,14 +210,14 @@ h6:hover{
       <a href="{% url 'admin:index' %}">Admin</a>
       <a href="{% url 'logout' %}">Log out</a>
       {% endif %}
-      {% if request.user.person.cost == 'Gold' %}
+      {% if request.user.customer.cost == 'Gold' %}
       <a href="/">Home</a>
       <a href="{% url 'goal' %}">Goal</a>
       <a href="{% url 'diary' %}">Diary</a>
       <a href="{% url 'feed' %}">Feed</a>
       <a href="{% url 'logout' %}">Log out</a>
       {% endif %}
-      {% if request.user.person.cost == 'Normal' %}
+      {% if request.user.customer.cost == 'Normal' %}
       <a href="/">Home</a>
       <a href="{% url 'goal' %}">Goal</a>
       <a href="{% url 'diary' %}">Diary</a>

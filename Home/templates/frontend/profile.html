@@ -97,7 +97,7 @@ background-size: cover;
 {% if request.user.is_authenticated %}        
     </div>
     <div class="pic-logo">
-        <img src="{{ request.user.person.image.url }}" alt="Avatar" width="150px" height="150px" style="border-radius: 50%;">
+        <img src="{{ request.user.customer.image.url }}" alt="Avatar" width="150px" height="150px" style="border-radius: 50%;">
         <div class="justify-content-center" style="text-align: center;margin-top: 20px;">
             <!-- <div class="col-200">
               <input  type="file" id="image" name="image" value=" add image..">
@@ -111,7 +111,7 @@ background-size: cover;
             <label for="name">Name :</label>
           </div>
           <div class="col-75">
-            <label id="name" name="name">{{request.user.person.name}}</label>
+            <label id="name" name="name">{{request.user.customer.name}}</label>
           </div>
         </div>
 
@@ -120,14 +120,14 @@ background-size: cover;
             <label for="weight">Weight :</label>
           </div>
           <div class="col-140">
-            <label id="weight" name="weight">{{request.user.person.weight}} KG</label>
+            <label id="weight" name="weight">{{request.user.customer.weight}} KG</label>
           </div>
 
           <div class="col-120">
             <label for="height">Height :</label>
           </div>
           <div class="col-140">
-            <label id="height" name="height">{{request.user.person.height}} cm</label>
+            <label id="height" name="height">{{request.user.customer.height}} cm</label>
           </div>
         </div>
 
@@ -136,14 +136,14 @@ background-size: cover;
             <label for="age">Age :</label>
           </div>
           <div class="col-140">
-            <label id="age" name="age">{{request.user.person.age}} year</label>
+            <label id="age" name="age">{{request.user.customer.age}} year</label>
           </div>
 
           <div class="col-120">
             <label for="gender">Gender :</label>
           </div>
           <div class="col-140">
-            <label id="gender" name="gender">{{request.user.person.gender}}</label>
+            <label id="gender" name="gender">{{request.user.customer.gender}}</label>
           </div>
         </div>
 
@@ -184,7 +184,7 @@ background-size: cover;
             <label for="phone">Phone :</label>
           </div>
           <div class="col-75">
-            <label id="phone" name="phone">{{request.user.person.phone}}</label>
+            <label id="phone" name="phone">{{request.user.customer.phone}}</label>
           </div>
         </div>
         <br>
@@ -193,7 +193,7 @@ background-size: cover;
             <label for="cost" id="cost">COST :</label>
           </div>
           <div class="col-75">
-            <label id="cost_row" name="cost">{{request.user.person.cost}}</label>
+            <label id="cost_row" name="cost">{{request.user.customer.cost}}</label>
           </div>
         </div>
         <br>

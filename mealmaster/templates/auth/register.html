@@ -152,7 +152,7 @@
 
   <div class="justify-content-center">
     <div class="container">
-      <form method="POST" id="form">
+      <form method="POST" id="form" enctype="multipart/form-data">
         {% csrf_token %}
           <h1>Register</h1>
         <div class="row">
@@ -262,6 +262,20 @@
           </div>
           <div class="col-200">
             <input  type="file" id="image" name="image" value=" add image..">
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-25">
+            <label for="upload">Diet</label>
+          </div>
+          <div class="col-12">
+            <select id="diet" name="diet">
+              <option value="">เลือกการ Diet</option>
+              {% for diet in diet_list %}
+                <option value={{diet.value}}>{{diet.name}}</option>
+              {% endfor %}
+            </select>
           </div>
         </div>
         <br>

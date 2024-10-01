@@ -1,15 +1,15 @@
 from django.urls import path
 from mealmaster import views
-from .views import register , feed , goal , diary , profile , upgrade , login_user , logout_user
+from mealmaster.pages.Home.urls import urls as urls_home
+from mealmaster.pages.Auth.urls import urls as urls_auth
+from mealmaster.pages.Profile.urls import urls as urls_profile
+from mealmaster.pages.Diary.urls import urls as urls_diary
+from mealmaster.pages.Predict.urls import urls as urls_predict
 
 urlpatterns = [
-    path('', views.index),
-    path('login/',login_user , name='login'),
-    path('logout/',logout_user, name='logout'),
-    path('register/',register ,name='register'),
-    path('goal/',goal, name="goal"),
-    path('diary/',diary, name="diary"),
-    path('feed/',feed, name="feed"),
-    path('profile/',profile , name="profile"),
-    path('upgrade/',upgrade, name="upgrade"),
+    *urls_home,
+    *urls_auth,
+    *urls_profile,
+    *urls_diary,
+    *urls_predict
 ]

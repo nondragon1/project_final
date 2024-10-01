@@ -5,5 +5,5 @@ from django.http import HttpResponse
 
 # Create your views here.
 
-def detailfood(request):
-    return render(request,"frontend/detailfood.html")
+# def detailfood(request):
+#     return render(request,"frontend/detailfood.html")

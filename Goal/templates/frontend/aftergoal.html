@@ -1,66 +1,65 @@
-{% include "frontend/layout2.html" %}
+{% include "home/layout2.html" %}
 {% load static %}
 
 {%block content%}
 <script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.bundle.js"></script>
 <style>
+    .header {
+        text-align: center;
+        margin-top: 20px;
+    }
 
-.header{
- text-align: center;
- margin-top: 20px;
-}
+    .container {
+        border: 5px solid black;
+        border-radius: 20px;
+        width: 70%;
+    }
 
-.container{
- border: 5px solid black;
- border-radius: 20px;
- width: 70%;
-}
+    .bar {
+        margin-top: 30px;
+    }
 
-.bar{
- margin-top: 30px;
-}
+    .type-diet {
+        border: 5px solid black;
+        border-radius: 20px;
+        background-color: #605dff;
+        padding: 10px;
+        width: 50%;
+    }
 
-.type-diet{
- border: 5px solid black;
- border-radius: 20px;
- background-color: #605dff;
- padding: 10px;
- width: 50%;
-}
+    /* ------------------------------------ */
 
-/* ------------------------------------ */
+    .next {
+        float: right;
 
-.next{
- float: right;
- 
-}
+    }
 
-.prev{
- float: left;
- 
-}
+    .prev {
+        float: left;
 
-/* The dots/bullets/indicators */
-.dot {
-  cursor: pointer;
-  height: 15px;
-  width: 15px;
-  margin: 0 2px;
-  background-color: #bbb;
-  border-radius: 50%;
-  display: inline-block;
-  transition: background-color 0.6s ease;
-}
+    }
 
-.active, .dot:hover {
-  background-color: #717171;
-}
+    /* The dots/bullets/indicators */
+    .dot {
+        cursor: pointer;
+        height: 15px;
+        width: 15px;
+        margin: 0 2px;
+        background-color: #bbb;
+        border-radius: 50%;
+        display: inline-block;
+        transition: background-color 0.6s ease;
+    }
 
-.enter{
- text-align: center;
- margin-top: 40px;
-}
+    .active,
+    .dot:hover {
+        background-color: #717171;
+    }
 
+    .enter {
+        text-align: center;
+        margin-top: 40px;
+    }
 </style>
 
 <div class="slideshow-container">
@@ -96,15 +95,18 @@
                     <div class="col-6 flex-column">
                         <div class="row" style="margin-top: 100px;">
                             <div class="col-12 flex-column">
-                                <img src="{% static '/images/goal-icon.png' %}" alt="model-icon" style="width: 50px ; height: 50px;">
+                                <img src="{% static '/images/goal-icon.png' %}" alt="model-icon"
+                                    style="width: 50px ; height: 50px;">
                                 <h7 style="margin-left: 20px;">Base Goal : 2500 Cal</h7>
-                            </div> 
+                            </div>
                             <div class="col-12 flex-column" style="margin-top: 50px;">
-                                <img src="{% static '/images/food-icon.png' %}" alt="model-icon" style="width: 50px ; height: 50px;">
+                                <img src="{% static '/images/food-icon.png' %}" alt="model-icon"
+                                    style="width: 50px ; height: 50px;">
                                 <h7 style="margin-left: 20px;">Food : 1500 Cal</h7>
                             </div>
                             <div class="col-12 flex-column" style="margin-top: 50px;">
-                                <img src="{% static '/images/exercise-icon.png' %}" alt="model-icon" style="width: 50px ; height: 50px;">
+                                <img src="{% static '/images/exercise-icon.png' %}" alt="model-icon"
+                                    style="width: 50px ; height: 50px;">
                                 <h7 style="margin-left: 20px;">Exercise : 500 Cal</h7>
                             </div>
                         </div>
@@ -113,8 +115,10 @@
                 <br>
                 <br>
             </div>
-            <a class="prev" onclick="plusSlides(-1)"><img src="{% static '/images/back-logo.png' %}" alt="model-icon" style="width: 50px ; height: 50px;"></a>
-            <a class="next" onclick="plusSlides(1)"><img src="{% static '/images/next-logo.png' %}" alt="model-icon" style="width: 50px ; height: 50px;"></a>
+            <a class="prev" onclick="plusSlides(-1)"><img src="{% static '/images/back-logo.png' %}" alt="model-icon"
+                    style="width: 50px ; height: 50px;"></a>
+            <a class="next" onclick="plusSlides(1)"><img src="{% static '/images/next-logo.png' %}" alt="model-icon"
+                    style="width: 50px ; height: 50px;"></a>
         </div>
     </div>
 
@@ -150,15 +154,18 @@
                     <div class="col-6 flex-column">
                         <div class="row" style="margin-top: 100px;">
                             <div class="col-12 flex-column">
-                                <img src="{% static '/images/goal-icon.png' %}" alt="model-icon" style="width: 50px ; height: 50px;">
+                                <img src="{% static '/images/goal-icon.png' %}" alt="model-icon"
+                                    style="width: 50px ; height: 50px;">
                                 <h7 style="margin-left: 20px;">Base Goal : 2500 Cal</h7>
-                            </div> 
+                            </div>
                             <div class="col-12 flex-column" style="margin-top: 50px;">
-                                <img src="{% static '/images/food-icon.png' %}" alt="model-icon" style="width: 50px ; height: 50px;">
+                                <img src="{% static '/images/food-icon.png' %}" alt="model-icon"
+                                    style="width: 50px ; height: 50px;">
                                 <h7 style="margin-left: 20px;">Food : 1200 Cal</h7>
                             </div>
                             <div class="col-12 flex-column" style="margin-top: 50px;">
-                                <img src="{% static '/images/exercise-icon.png' %}" alt="model-icon" style="width: 50px ; height: 50px;">
+                                <img src="{% static '/images/exercise-icon.png' %}" alt="model-icon"
+                                    style="width: 50px ; height: 50px;">
                                 <h7 style="margin-left: 20px;">Exercise : 700 Cal</h7>
                             </div>
                         </div>
@@ -167,8 +174,10 @@
                 <br>
                 <br>
             </div>
-            <a class="prev" onclick="plusSlides(-1)"><img src="{% static '/images/back-logo.png' %}" alt="model-icon" style="width: 50px ; height: 50px;"></a>
-            <a class="next" onclick="plusSlides(1)"><img src="{% static '/images/next-logo.png' %}" alt="model-icon" style="width: 50px ; height: 50px;"></a>
+            <a class="prev" onclick="plusSlides(-1)"><img src="{% static '/images/back-logo.png' %}" alt="model-icon"
+                    style="width: 50px ; height: 50px;"></a>
+            <a class="next" onclick="plusSlides(1)"><img src="{% static '/images/next-logo.png' %}" alt="model-icon"
+                    style="width: 50px ; height: 50px;"></a>
         </div>
     </div>
 
@@ -204,15 +213,18 @@
                     <div class="col-6 flex-column">
                         <div class="row" style="margin-top: 100px;">
                             <div class="col-12 flex-column">
-                                <img src="{% static '/images/goal-icon.png' %}" alt="model-icon" style="width: 50px ; height: 50px;">
+                                <img src="{% static '/images/goal-icon.png' %}" alt="model-icon"
+                                    style="width: 50px ; height: 50px;">
                                 <h7 style="margin-left: 20px;">Base Goal : 15000 Cal</h7>
-                            </div> 
+                            </div>
                             <div class="col-12 flex-column" style="margin-top: 50px;">
-                                <img src="{% static '/images/food-icon.png' %}" alt="model-icon" style="width: 50px ; height: 50px;">
+                                <img src="{% static '/images/food-icon.png' %}" alt="model-icon"
+                                    style="width: 50px ; height: 50px;">
                                 <h7 style="margin-left: 20px;">Food : 3500 Cal</h7>
                             </div>
                             <div class="col-12 flex-column" style="margin-top: 50px;">
-                                <img src="{% static '/images/exercise-icon.png' %}" alt="model-icon" style="width: 50px ; height: 50px;">
+                                <img src="{% static '/images/exercise-icon.png' %}" alt="model-icon"
+                                    style="width: 50px ; height: 50px;">
                                 <h7 style="margin-left: 20px;">Exercise : 2000 Cal</h7>
                             </div>
                         </div>
@@ -221,17 +233,19 @@
                 <br>
                 <br>
             </div>
-            <a class="prev" onclick="plusSlides(-1)"><img src="{% static '/images/back-logo.png' %}" alt="model-icon" style="width: 50px ; height: 50px;"></a>
-            <a class="next" onclick="plusSlides(1)"><img src="{% static '/images/next-logo.png' %}" alt="model-icon" style="width: 50px ; height: 50px;"></a>
+            <a class="prev" onclick="plusSlides(-1)"><img src="{% static '/images/back-logo.png' %}" alt="model-icon"
+                    style="width: 50px ; height: 50px;"></a>
+            <a class="next" onclick="plusSlides(1)"><img src="{% static '/images/next-logo.png' %}" alt="model-icon"
+                    style="width: 50px ; height: 50px;"></a>
         </div>
     </div>
 
 </div>
 <br>
 <div style="text-align:center">
-  <span class="dot" onclick="currentSlide(1)"></span> 
-  <span class="dot" onclick="currentSlide(2)"></span> 
-  <span class="dot" onclick="currentSlide(3)"></span> 
+    <span class="dot" onclick="currentSlide(1)"></span>
+    <span class="dot" onclick="currentSlide(2)"></span>
+    <span class="dot" onclick="currentSlide(3)"></span>
 </div>
 
 <div class="tab">
@@ -242,19 +256,22 @@
             </div>
             <div class="row" style="text-align: center;">
                 <div class="col-4 flex-column">
-                    <img src="{% static '/images/burn-logo.png' %}" alt="model-icon" style="width: 50px ; height: 50px;">
+                    <img src="{% static '/images/burn-logo.png' %}" alt="model-icon"
+                        style="width: 50px ; height: 50px;">
                 </div>
                 <div class="col-4 flex-column" style="margin-top: 15px;">
                     <h7>Exercise : 0 Cal</h7>
                 </div>
                 <div class="col-4 flex-column">
-                    <input type="text" id="add-exercise" name="add-exercise" placeholder="Add..." style="margin-top: 10px;">
+                    <input type="text" id="add-exercise" name="add-exercise" placeholder="Add..."
+                        style="margin-top: 10px;">
                 </div>
             </div>
             <br>
             <div class="row" style="text-align: center;">
                 <div class="col-4 flex-column">
-                    <img src="{% static '/images/time-logo.png' %}" alt="model-icon" style="width: 40px ; height: 40px;">
+                    <img src="{% static '/images/time-logo.png' %}" alt="model-icon"
+                        style="width: 40px ; height: 40px;">
                 </div>
                 <div class="col-4 flex-column" style="margin-top: 15px;">
                     <h7>TIME : 00:00 HR</h7>
@@ -276,7 +293,9 @@
 <br>
 <br>
 <div class="enter">
-    <a type="button" class="btn btn-dark" href="{% url 'goal' %}" style="width: 400px;height: 50px;"><h4>Cancel</h4></a>
+    <a type="button" class="btn btn-dark" href="{% url 'goal' %}" style="width: 400px;height: 50px;">
+        <h4>Cancel</h4>
+    </a>
 </div>
 <br>
 <br>
@@ -287,85 +306,85 @@
 <br>
 <script>
     var data = {
-  labels: [
-    "Remaining energy",
-    "Energy consumed",
-    "Exercise"
-  ],
-  datasets: [
-    {
-      data: [500, 1500, 500],
-      backgroundColor: [
-      "#b91d47",
-      "#00aba9",
-      "#FFCE56"
-      ],
-      hoverBackgroundColor: [
-      "#b91d47",
-      "#00aba9",
-      "#FFCE56"
-      ]
-    }]
-};
+        labels: [
+            "Remaining energy",
+            "Energy consumed",
+            "Exercise"
+        ],
+        datasets: [
+            {
+                data: [500, 1500, 500],
+                backgroundColor: [
+                    "#b91d47",
+                    "#00aba9",
+                    "#FFCE56"
+                ],
+                hoverBackgroundColor: [
+                    "#b91d47",
+                    "#00aba9",
+                    "#FFCE56"
+                ]
+            }]
+    };
 
-Chart.pluginService.register({
-  beforeDraw: function(chart) {
-    var width = chart.chart.width,
-        height = chart.chart.height,
-        ctx = chart.chart.ctx;
+    Chart.pluginService.register({
+        beforeDraw: function (chart) {
+            var width = chart.chart.width,
+                height = chart.chart.height,
+                ctx = chart.chart.ctx;
 
-    ctx.restore();
-    var fontSize = (height / 114).toFixed(2);
-    ctx.font = fontSize + "em sans-serif";
-    ctx.textBaseline = "middle";
+            ctx.restore();
+            var fontSize = (height / 114).toFixed(2);
+            ctx.font = fontSize + "em sans-serif";
+            ctx.textBaseline = "middle";
 
-    var text = "500",
-        textX = Math.round((width - ctx.measureText(text).width) / 2),
-        textY = height / 2;
+            var text = "500",
+                textX = Math.round((width - ctx.measureText(text).width) / 2),
+                textY = height / 2;
 
-    ctx.fillText(text, textX, textY);
-    ctx.save();
-  }
-});
+            ctx.fillText(text, textX, textY);
+            ctx.save();
+        }
+    });
 
-var chart = new Chart(document.getElementById('myChart'), {
-  type: 'doughnut',
-  data: data,
-  options: {
-  	responsive: true,
-    legend: {
-      display: false
+    var chart = new Chart(document.getElementById('myChart'), {
+        type: 'doughnut',
+        data: data,
+        options: {
+            responsive: true,
+            legend: {
+                display: false
+            }
+        }
+    });
+
+    // ------------------------
+    let slideIndex = 1;
+    showSlides(slideIndex);
+
+    function plusSlides(n) {
+        showSlides(slideIndex += n);
     }
-  }
-});
 
-// ------------------------
-let slideIndex = 1;
-showSlides(slideIndex);
+    function currentSlide(n) {
+        showSlides(slideIndex = n);
+    }
 
-function plusSlides(n) {
-  showSlides(slideIndex += n);
-}
-
-function currentSlide(n) {
-  showSlides(slideIndex = n);
-}
-
-function showSlides(n) {
-  let i;
-  let slides = document.getElementsByClassName("mySlides");
-  let dots = document.getElementsByClassName("dot");
-  if (n > slides.length) {slideIndex = 1}    
-  if (n < 1) {slideIndex = slides.length}
-  for (i = 0; i < slides.length; i++) {
-    slides[i].style.display = "none";  
-  }
-  for (i = 0; i < dots.length; i++) {
-    dots[i].className = dots[i].className.replace(" active", "");
-  }
-  slides[slideIndex-1].style.display = "block";  
-  dots[slideIndex-1].className += " active";
-}
+    function showSlides(n) {
+        let i;
+        let slides = document.getElementsByClassName("mySlides");
+        let dots = document.getElementsByClassName("dot");
+        if (n > slides.length) { slideIndex = 1 }
+        if (n < 1) { slideIndex = slides.length }
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+        for (i = 0; i < dots.length; i++) {
+            dots[i].className = dots[i].className.replace(" active", "");
+        }
+        slides[slideIndex - 1].style.display = "block";
+        dots[slideIndex - 1].className += " active";
+    }
 </script>
 
 {% endblock %}

@@ -28,7 +28,17 @@ SECRET_KEY = 'django-insecure-w#-gs*+d+$ti^vj(yh*vm@j(k#e$@3r2rtn!9_sf@#np00nl@!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'b04c-1-46-192-249.ngrok-free.app',
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost',
+    'http://127.0.0.1',
+    'https://b04c-1-46-192-249.ngrok-free.app',
+]
 
 
 # Application definition
@@ -41,14 +51,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'mealmaster',
-    'Home',
+    # 'Home',
     'Goal',
     'Diary',
     'Feed',
     'sweetify',
     'Flaskapi',
     'rest_framework',
-    
 ]
 
 SWEETIFY_SWEETALERT_LIBRARY = 'sweetalert2'
@@ -92,8 +101,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'webapp_project',
+        'HOST': 'mysql_workout',
         'USER': 'root',
-        'PASSWORD': '',
+        'PASSWORD': 'workout',
     }
 }
 

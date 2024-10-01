@@ -1,0 +1,28 @@
+services:
+  app_workout:
+    build : .
+    volumes:
+      - ./:/app
+    ports:
+      - 18000:8000
+
+  mysql_workout:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: workout
+      MYSQL_DATABASE: webapp_project
+    volumes:
+      - mysql_db:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: mysql_workout
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: workout
+    ports:
+      - 18001:80
+
+volumes:
+  mysql_db:

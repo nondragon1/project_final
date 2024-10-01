@@ -1,7 +1,7 @@
 from django.contrib import admin
-from mealmaster.models import person
+from mealmaster.models import adminModel
 
 # Register your models here.
-@admin.register(person)
+@admin.register(adminModel)
 class CustomUserAdmin(admin.ModelAdmin):
     list_display = ("user", "name")

@@ -1,0 +1,116 @@
+{% include "home/layout4.html" %}
+{% load static %}
+{%block content%}
+
+<style>
+
+.header{
+ text-align: center;
+ margin-top: 20px;
+}
+
+.container{
+ border: 5px solid black;
+ border-radius: 20px;
+ width: 70%;
+}
+
+.bar{
+ margin-top: 30px;
+}
+
+.user-blogs{
+ margin-top: 30px;
+}
+
+.pic-ex{
+ margin-top: 20px;
+ margin-left: 100px;
+}
+
+</style>
+
+
+<div class="myfeed">
+    <div class="header">
+        <h1>GOBAL FEED</h1>
+    </div>
+    <div class="bar">
+        <div class="container">
+            <div class="row">
+                <div class="user-blogs">
+                    <img src="{% static '/images/usercat1.jpg' %}" alt="Avatar" width="100px" height="100px" style="border-radius: 50%;">
+                    <p7 style="margin-left: 20px;">Alex sander</p7>
+                </div>
+            </div>
+            <br>
+            <div class="content-info">
+                <p7 style="margin-left: 20px;">how to Decrease to fast?</p7>
+                <br>
+                <p7 style="margin-left: 20px;">I need body sexy help me please.</p7>
+            </div>
+            <div class="row" style="text-align: center;margin-top: 30px;">
+                <div class="col-4 flex-column">
+                    <img src="{% static '/images/like-logo.png' %}" alt="icon-BG" width="30px" height="30px">
+                    <h7 style="margin-left: 5px;">LIKE</h7>
+                </div>
+                <div class="col-4 flex-column">
+                    <img src="{% static '/images/Share-logo.png' %}" alt="icon-BG" width="30px" height="30px">
+                    <h7 style="margin-left: 5px;">SHARE</h7>
+                </div>
+                <div class="col-4 flex-column">
+                    <img src="{% static '/images/comment-logo.png' %}" alt="icon-BG" width="30px" height="30px">
+                    <h7 style="margin-left: 5px;">COMMENT</h7>
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+    <div class="bar" style="margin-top: 30px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-4 flex-column">
+                    <div class="user-blogs">
+                        <img src="{% static '/images/usercat2.jpg' %}" alt="Avatar" width="100px" height="100px" style="border-radius: 50%;">
+                        <p7 style="margin-left: 20px;">Romanom sindy</p7>
+                    </div>
+                </div>
+                <div class="col-4 flex-column">
+                    <div class="pic-ex">
+                        <img src="{% static '/images/foodEX.png' %}" alt="Avatar" width="150px" height="150px">
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="content-info">
+                <p7 style="margin-left: 20px;">The best healty food</p7>
+                <br>
+                <p7 style="margin-left: 20px;">Solution : avocado 1 ea , carrot 1 ea ,........</p7>
+            </div>
+            <div class="row" style="text-align: center;margin-top: 30px;">
+                <div class="col-4 flex-column">
+                    <img src="{% static '/images/like-logo.png' %}" alt="icon-BG" width="30px" height="30px">
+                    <h7 style="margin-left: 5px;">LIKE</h7>
+                </div>
+                <div class="col-4 flex-column">
+                    <img src="{% static '/images/Share-logo.png' %}" alt="icon-BG" width="30px" height="30px">
+                    <h7 style="margin-left: 5px;">SHARE</h7>
+                </div>
+                <div class="col-4 flex-column">
+                    <img src="{% static '/images/comment-logo.png' %}" alt="icon-BG" width="30px" height="30px">
+                    <h7 style="margin-left: 5px;">COMMENT</h7>
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+</div>
+
+{% endblock %}
