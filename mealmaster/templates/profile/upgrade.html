@@ -41,8 +41,8 @@
 <div class="header">
     <h1><img src="{% static '/images/king-model.png' %}" alt="Avatar" width="70px" height="70px" style="margin-bottom: 25px;">UPGRADE USER</h1>
 </div>
-<div class="container" type="button"onclick="changecost()">
-    <form method="POST" id="form">
+<form class="container" method="POST" id="form">
+    <div onclick="changecost()">
         {% csrf_token %}
         <div class="header-info">
             <h1>GOLD</h1>
@@ -61,11 +61,8 @@
             <br>
             <h7>- Setting Notification is voice</h7>
         </div>
-    </form>
-    <br>
-    <br>
-    <br>
-</div>
+    </div>
+</form>
 <br>
 <br>
 <br>
@@ -75,16 +72,16 @@
 <br>
 
 <script>
-
 function changecost(event) {
-    const Vcost = Gold;
-    Swal.fire({
-            icon: 'success',
-            title: 'Success you Upgrade user',
-            text: 'Your work has been saved',
-          }).then(function(result) {
-            document.getElementById('form').submit();
-          })
+    document.getElementById("form").submit()
+    // const Vcost = Gold;
+    // Swal.fire({
+    //         icon: 'success',
+    //         title: 'Success you Upgrade user',
+    //         text: 'Your work has been saved',
+    //       }).then(function(result) {
+    //         document.getElementById('form').submit();
+    //       })
 }
 </script>
 

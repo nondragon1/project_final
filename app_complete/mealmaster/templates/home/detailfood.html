@@ -1,0 +1,87 @@
+{% include "home/layout3.html" %}
+{% load static %}
+
+{%block content%}
+
+<style>
+
+.header{
+ text-align: center;
+ margin-top: 30px;
+}
+
+.pic-food{
+ text-align: center;
+ margin-top: 30px;
+}
+
+.row{
+ text-align: center;
+}
+
+</style>
+
+<div class="container">
+    <div class="pic-food">
+        <img src="{{ '/media/thaimenu/'|add:url_image }}" alt="food-pic" style="width: 80% ;">
+    </div>
+        <br>
+        <br>
+        <br>
+        <form method="POST" action="/detailfood/add/menu/">
+            {% csrf_token %}
+            <div class="card-body">
+                <div>
+                    <input oninput="calculateCal(this , '{{calorie}}')" placeholder="Number of bowls" type="text" required name="number" class="form-control" onkeypress="return isNumberKey(event)"/>
+                    <input hidden name="menu_id" value="{{menu_id}}"/>
+                    <input hidden id="calorie" value="{{calorie}}"/>
+                    <div class="form-control mt-1" id="calorie-calculate">
+                        <span>Calorie : </span>
+                        <span id="calorie-value">0</span>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-6 flex-column">
+                        <a type="button" class="btn btn-secondary" href="/" style="width: 400px;height: 50px;"><h4>return</h4></a>
+                    </div>
+            
+                    <div class="col-6 flex-column">
+                        <button type="submit" class="btn btn-success" href="" style="width: 400px;height: 50px;"><h4>submit</h4></button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+</div>
+<script>
+    function calculateCal(ev , calorie) {
+        const calorieCalculate = document.getElementById("calorie-calculate")
+        const calculate = ev.value * calorie
+        calorieCalculate.querySelector("#calorie-value").innerHTML = calculate
+    }
+
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        // Allow: backspace, tab, enter, and .
+        if (charCode == 46 || charCode == 8 || charCode == 9 || charCode == 13) {
+            return true;
+        }
+        // Allow: Ctrl+A
+        if (evt.ctrlKey && charCode == 65) {
+            return true;
+        }
+        // Ensure that it is a number and only one decimal point
+        if (charCode < 48 || charCode > 57) {
+            return false;
+        }
+        return true;
+    }
+</script>
+
+{% endblock %}

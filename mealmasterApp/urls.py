@@ -23,10 +23,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include("mealmaster.urls")),
     # path('', include("Home.urls")),
-    path('', include("Goal.urls")),
-    path('goal/', include("Goal.urls")),
-    path('goal/detailgoal/', include("Goal.urls")),
-    path('goal/detailgoal/detailgoalfat/', include("Goal.urls")),
+    # path('', include("Goal.urls")),
+    # path('goal/', include("Goal.urls")),
+    # path('goal/detailgoal/', include("Goal.urls")),
+    # path('goal/detailgoal/detailgoalfat/', include("Goal.urls")),
     # path('', include('Flaskapi.urls')),
     
 ]

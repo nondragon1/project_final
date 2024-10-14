@@ -1,22 +1,27 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 
-
 from django.shortcuts import render
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
-import tensorflow as tf
+import base64
 from PIL import Image, UnidentifiedImageError
 import numpy as np
 import io , os
 from pathlib import Path
-from mealmaster.models import Menus , FoodCalorie
+from mealmaster.models import Menus , FoodCalorie , customer
+from uuid import uuid4
+
+from fastai.vision.all import (
+    load_learner
+)
 # from keras.models import load_model
 # from keras.layers import BatchNormalization
 
 # โหลดโมเดล
-model_path = "/app/Flaskapi/ML_model40ep.h5"
-model = tf.keras.models.load_model(model_path, compile=False)
+# model_path = "/app/Flaskapi/ML_model40ep.h5"
+model_path = "/app/mealmaster/modules/export.pkl"
+model = load_learner(model_path, cpu=True)
 # model = load_model('C:/Users/Admin/Desktop/ProjectEX/mealmasterApp/Flaskapi/ML_model40ep.h5', custom_objects={'BatchNormalization': BatchNormalization})
 def preprocess_image(uploaded_file):
     try:
@@ -33,6 +38,18 @@ def preprocess_image(uploaded_file):
     except UnidentifiedImageError:
         return None
 
+def fastai_process_image(uploaded_file) :
+    image = Image.open(uploaded_file)
+
+    if image.mode == 'RGBA':
+        image = image.convert('RGB')
+
+    id = uuid4()
+    image_path = f"/app/mealmaster/pages/Predict/temp/{id}_temp_image.jpg"
+    image.save(image_path)
+    
+    return image_path
+
 # convert dict
 thaimenu={
     "00":"แกงเขียวหวานไก่","01":"แกงเทโพ","02":"แกงเลียง","03":"แกงจืดเต้าหู้หมูสับ","04":"แกงจืดมะระยัดไส้",
@@ -45,7 +62,6 @@ thaimenu={
     "35":"ผัดมะเขือยาวหมูสับ","36":"ผัดหอยลาย","37":"ฝอยทอง","38":"พะแนงไก่","39":"ยำถั่วพู",
     "40":"ยำวุ้นเส้น","41":"ลาบหมู","42":"สังขยาฟักทอง","43":"สาคูไส้หมู","44":"ส้มตำ","45":"หมูปิ้ง","46":"หมูสะเต๊ะ","47":"ห่อหมก"
 }
-
 
 def Predict(request):
     return render(request,"predict/index.html")
@@ -60,32 +76,31 @@ def PredictMenu(request) :
         if file.name == '':
             return JsonResponse({'error': 'No selected file'}, status=400)
 
-        processed_image = preprocess_image(file)
+        processed_image = fastai_process_image(file)
 
         if processed_image is None:
             return JsonResponse({'error': 'Cannot process the uploaded file as an image'}, status=400)
 
         try:
             predictions = model.predict(processed_image)
-            class_labels = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47']
-            # print(f"Predictions: {predictions}")  # Debugging line
-            # print(f"Predictions Type: {type(predictions)}")  # Debugging line
-            # print(f"Predictions Shape: {predictions.shape}")  # Debugging line
+            os.remove(processed_image)
+            # class_labels = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47']           
+            percent_verify = 65
             
-            trad_show = 90
-            top_max = 5
-            predicted_class_top = np.argsort(predictions[0])[-top_max:][::-1]
+            # top_max = 1
+            # predicted_class_top = np.argsort()[-top_max:][::-1]
             
-            predicted_class = [class_labels[class_label] for class_label in predicted_class_top]
-            confidence = np.max(predictions) * 100
+            # predicted_class = [class_labels[class_label] for class_label in predicted_class_top]
+            predicted_class = [predictions[0]]
+            # confidence = np.max(predictions) * 100
+            confidence = predictions[2].tolist()[predictions[1].item()] * 100
              # Display the prediction
             # show = [thaimenu[predict] for predict in predicted_class]
             menu_selecteds= []
-            if confidence > trad_show :
-                for menu in Menus.objects.filter(label__in=predicted_class).values("id" , "name" , "url_resource") :
+            if confidence > percent_verify :
+                for menu in Menus.objects.filter(label__in=predicted_class).values("id" , "name" , "url_image" , "calorie") :
                     menu_selecteds.append(menu)
             
-
             return JsonResponse({"label" : predicted_class , "menus" : menu_selecteds , 'confidence': confidence})
         except Exception as e:
             print(e)
@@ -108,20 +123,31 @@ def SelectMenu(request) :
     menu_id = request.POST["menu_id"]
     number = request.POST["number"]
 
+    profile = customer.objects.get(user_id=user_id)
+    
     if menu_id and number and user_id :
         try :
-            foodCalorie = FoodCalorie(
-                user_id=user_id,
-                menu_id=menu_id,
-                rate_eat=number
-            )
+            diet_round_id = profile.diet
+            if diet_round_id :
+                foodCalorie = FoodCalorie(
+                    diet_round_id=diet_round_id,
+                    user_id=user_id,
+                    menu_id=menu_id,
+                    rate_eat=number
+                )
 
-            foodCalorie.save()
-            object_return = {
-                "title" : "Eat \(>_<)/",
-                "status" : "success",
-                "status_response" : 200,
-            }
+                foodCalorie.save()
+                object_return = {
+                    "title" : "Eat \(>_<)/",
+                    "status" : "success",
+                    "status_response" : 200,
+                }
+            else :
+                object_return = {
+                    "title" : "Please select Diet",
+                    "status" : "error",
+                    "status_response" : 403,
+                }
         except :
             object_return = {
                 "title" : "Please enter data",

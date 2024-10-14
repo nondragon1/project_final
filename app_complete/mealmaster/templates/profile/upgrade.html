@@ -1,0 +1,88 @@
+{% include "home/layout3.html" %}
+{% load static %}
+
+{%block content%}
+
+<style>
+
+.header{
+ text-align: center;
+ margin-top: 30px;
+}
+
+.container{
+ margin-top: 20px;
+ border: 5px double black;
+ border-radius: 20px;
+ width: 50%;
+}
+
+.container:hover{
+ border: 5px double #e9fb44;
+ background-color: #979797;
+ color: #e9fb44;
+}
+
+.header-info{
+ margin-top: 20px;
+ text-align: center;
+}
+
+.pic-model{
+ text-align: center;
+}
+
+.user-info{
+ margin-top: 20px;
+}
+
+</style>
+
+<div class="header">
+    <h1><img src="{% static '/images/king-model.png' %}" alt="Avatar" width="70px" height="70px" style="margin-bottom: 25px;">UPGRADE USER</h1>
+</div>
+<form class="container" method="POST" id="form">
+    <div onclick="changecost()">
+        {% csrf_token %}
+        <div class="header-info">
+            <h1>GOLD</h1>
+        </div>
+        <div class="pic-model">
+            <img src="{% static '/images/kinguser.png' %}" alt="Avatar" width="200px" height="200px">
+        </div>
+        <div class="user-info">
+            <h7>Privilege</h7>
+            <br>
+            <h7>- comment unlimit</h7>
+            <br>
+            <h7>- like unlimit</h7>
+            <br>
+            <h7>- Watch Feed another gold user</h7>
+            <br>
+            <h7>- Setting Notification is voice</h7>
+        </div>
+    </div>
+</form>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<script>
+function changecost(event) {
+    document.getElementById("form").submit()
+    // const Vcost = Gold;
+    // Swal.fire({
+    //         icon: 'success',
+    //         title: 'Success you Upgrade user',
+    //         text: 'Your work has been saved',
+    //       }).then(function(result) {
+    //         document.getElementById('form').submit();
+    //       })
+}
+</script>
+
+{% endblock %}

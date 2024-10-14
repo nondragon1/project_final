@@ -31,13 +31,13 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'b04c-1-46-192-249.ngrok-free.app',
+    '7f12-1-47-196-51.ngrok-free.app',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost',
     'http://127.0.0.1',
-    'https://b04c-1-46-192-249.ngrok-free.app',
+    'https://7f12-1-47-196-51.ngrok-free.app',
 ]
 
 
@@ -102,6 +102,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'webapp_project',
         'HOST': 'mysql_workout',
+        # 'HOST': '54.169.211.200',
         'USER': 'root',
         'PASSWORD': 'workout',
     }

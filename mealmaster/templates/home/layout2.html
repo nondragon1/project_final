@@ -198,9 +198,13 @@
     <div class="search-container">
       <form action="/">
         <div class="barcode-container">
-          <a href="/"><img src="{% static '/images/barcodelogo.png' %}" alt="barcodelogo" width="30px"
-              height="30px"></a>
+          <a href="/"><img src="{% static '/images/barcodelogo.png' %}" alt="barcodelogo" width="30px" height="30px"></a>
         </div>
+        {% if request.user.customer.cost == 'Gold' and request.user.customer.diet %}
+        <div class="barcode-container">
+          <a href="/predict"><img src="{% static '/images/scan.jpg' %}" alt="barcodelogo" width="30px" height="30px"></a>
+        </div>
+        {% endif %}
         <input type="text" placeholder="Search.." name="search">
         <button type="submit"><i class="fa fa-search"></i></button>
       </form>
@@ -247,10 +251,12 @@
 
       <div class="col-4 flex-column">
         <h1>MEAL MASTER</h1>
+        {% if request.user.customer.cost == 'Normal' %}
         <a class="btn" href="{% url 'upgrade' %}">
           <h6 type="button"><img src="{% static '/images/kinglogo.png' %}" alt="kinglogo" width="30px"
               height="30px">Upgrade Gold User</h6>
         </a>
+        {% endif %}
       </div>
 
       <div class="col-4 flex-column">
@@ -294,6 +300,11 @@
 
   {% endblock %}
 
+  <script>
+    const response = await fetch("/update-notify")
+    const data = await response.json()
+    console.log(data)
+  </script>
 </body>
 
 </html>

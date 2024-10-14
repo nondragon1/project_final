@@ -1,0 +1,289 @@
+{% extends "home/layout2.html" %}
+{% load static %}
+{%block content%}
+<style>
+    .content-predict {
+        overflow: auto;
+        height: calc(100% - 153px - 3rem);
+        padding-bottom: 130px;
+    }
+</style>
+<section class="mt-5 content-predict">
+    <form id="from-predict" class="container d-flex flex-column">
+        <div class="row mb-2">
+            <div class="col-12 d-flex justify-content-center">
+                <a id="bt-change-mode" onclick="changeMode()" class="btn btn-dark">Upload mode</a>
+            </div>
+        </div>
+        {% csrf_token %}
+        <div id="upload-mode" style="display: none;">
+            <label id="bt-add-predict" class="d-flex justify-content-center">
+                <a class="btn btn-dark">Click to upload image</a>
+                <input hidden name="image-progress" id="imageInput" type="file"/>
+            </label>
+            <div
+                class="mt-2"
+                id="imagePreview"
+                style="display: none;"
+            >
+                <div class="preview-progress d-flex justify-content-center align-items-center">
+                    <img src="#" alt="Image Preview" style="max-width: 200px; width: 70%;">
+                </div>
+            </div>
+        </div>
+        <div id="scan-mode">
+            <label id="bt-add-predict" class="d-flex justify-content-between">
+                <a onclick="startScan(this)" class="btn btn-dark">Scan</a>
+                <a onclick="cameraControl(this)" class="btn btn-dark">สลับกล้อง</a>
+            </label>
+            <div class="preview-progress d-flex justify-content-center align-items-center">
+                <video id="video" width="300" height="300"></video>
+                <canvas id="canvas" width="300" height="300" style="display: none;"></canvas>
+            </div>
+        </div>
+    </form>
+    <div class="p-5 d-flex justify-content-center align-item-center">
+        <div id="from-menu-selecteds" class="row justify-content-center"></div>
+    </div>
+</section>
+
+<script>
+    let stream;
+    var stateButton = true
+
+    let IntervalTime = 0
+    let stateCameraUser = true
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+
+    function manageImage(data , display) {
+        const previewImage = document.getElementById('imagePreview');
+        previewImage.querySelector("img").src = data;
+        previewImage.style.display = display
+    }
+
+    document.getElementById('imageInput').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                manageImage(e.target.result , "block")
+                submit()
+                ChangeStateButton("off")
+            }
+            reader.readAsDataURL(file)
+
+            const buttonSubmit = document.getElementById("button-submit-image")
+            if(buttonSubmit) buttonSubmit.style.display = "block"
+        }
+    });
+
+    async function sentPredict(formData) {
+        Swal.fire({
+            title: 'กำลังตรวจสอบอาหาร',
+            text: 'กรุณารอสักครู่...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+        const response = await fetch('/predict/menu', {
+            method: 'POST',
+            body: formData,
+        })
+        const { menus } = await response.json()
+        const status = response.status
+        switch(status) {
+            case 200 :
+                const content_from_menus = document.getElementById("from-menu-selecteds")
+                let content = ""
+                menus.forEach(({ id , name , url_image , calorie }) => {
+                    content += `
+                        <form class="card col-10 col-sm-8 col-lg-6 col-xl-6 m-1" onsubmit="return selected(this);">
+                            {% csrf_token %}
+                            <img class="card-img-top" style="aspect-ratio: 600 / 600;width: 100%;" src="/media/thaimenu/${url_image}" alt="${name}">
+                            <div class="card-body">
+                                <h5 class="card-title">${name}</h5>
+                                <input oninput="calculateCal(this , ${calorie})" placeholder="Number of bowls" type="text" required name="number" class="form-control" onkeypress="return isNumberKey(event)"/>
+                                <input hidden name="menu_id" value="${id}"/>
+                                <div class="form-control mt-1" id="calorie-calculate">
+                                    <span>Calorie : </span>
+                                    <span id="calorie-value">0</span>
+                                </div>
+                                <button class="btn btn-dark mt-2 w-100">Select</button>
+                            </div>
+                        </form>
+                    `
+                })
+                content_from_menus.innerHTML = content
+                break;
+            default:
+                break;
+        }
+        Swal.close();
+        return menus
+    }
+
+    // upload
+    function ChangeStateButton(state) {
+        const button = document.querySelector("#bt-add-predict")
+        const input = button.querySelector("input")
+        switch(state) {
+            case "on" :
+                input.disabled = false
+                stateButton = true
+                break;
+            case "off" :
+                input.disabled = true
+                stateButton = false
+                break;
+        }
+    }
+
+    async function submit() {
+        const from = document.getElementById("from-predict")
+        const formData = new FormData(from)
+        const data = await sentPredict(formData)
+        ChangeStateButton("on")
+    }
+
+    // scan
+    function captureAndSendImage() {
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        canvas.toBlob( async function(blob) {
+            const from = document.getElementById("from-predict")
+            const formData = new FormData(from);
+            formData.append('image-progress', blob, 'canvasImage.png');
+            stopScan()
+            const data = await sentPredict(formData)
+        }, 'image/png');
+    }
+
+    function cameraControl() {
+        stopScan()
+        stateCameraUser = !stateCameraUser
+        startScan()
+    }
+
+    async function startScan() {
+        // video.play()
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+        }
+        try {
+            stream = await navigator.mediaDevices.getUserMedia({ video: {
+            facingMode: { exact: !stateCameraUser ? "environment" : "user" } } })
+            video.srcObject = stream;
+            // video.play()
+        } catch(err) {
+            alert(err)
+        }
+        video.play()
+        clearTimeout(IntervalTime)
+        IntervalTime = setTimeout(captureAndSendImage, 2000);
+    }
+
+    function stopScan() {
+        video.pause()
+        clearTimeout(IntervalTime)
+    }
+
+    const mode = {
+        state : 0,
+        modes : ["Scan mode" , "Upload mode"]
+    }
+
+    const uploadMode = document.getElementById("upload-mode")
+    const scanMode = document.getElementById("scan-mode")
+    const buttonChangeMode = document.getElementById("bt-change-mode")
+    const menuContent = document.getElementById("from-menu-selecteds")
+
+    function changeMode() {
+        buttonChangeMode.innerHTML = mode.modes[mode.state]
+        mode.state = mode.state === 0 ? 1 : 0
+
+        uploadMode.style.display = mode.state ? "block" : "none"
+        scanMode.style.display = mode.state ? "none" : "block"
+
+        if(mode.state) {
+            // upload mode
+            video.srcObject = null;
+            stateCameraUser = true;
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stopScan()
+            }
+        } else {
+            // scan mode
+            manageImage("#" , "none")
+        }
+
+        menuContent.innerHTML = ""
+    }
+</script>
+
+<script>
+    function calculateCal(ev , calorie) {
+        const calorieCalculate = document.getElementById("calorie-calculate")
+        const calculate = ev.value * calorie
+        calorieCalculate.querySelector("#calorie-value").innerHTML = calculate
+    }
+
+    function selected(target) {
+        Swal.fire({
+            title: 'กำลังประมวลผล',
+            text: 'กรุณารอสักครู่...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        const formData = new FormData(target)
+        fetch('/predict/select', {
+            method: 'POST',
+            body: formData,
+        })
+            .then(async (response) => ({
+                data : await response.json(),
+                status : response.status
+            }))
+            .then(data => {
+                const { status , data : { title , status : status_swal } } = data
+
+                Swal.close();
+
+                Swal.fire({
+                    title: title,
+                    timer: 3000,
+                    text: status === 200 ? 'คุณกินอาหารแล้ว' : "อาหารยังไม่กิน",
+                    icon: status_swal,
+                })
+
+                const calorieCalculate = document.getElementById("calorie-calculate")
+                target.querySelector("input[name='number']").value = ""
+                calorieCalculate.querySelector("#calorie-value").innerHTML = ""
+            })
+        return false
+    }
+
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        // Allow: backspace, tab, enter, and .
+        if (charCode == 46 || charCode == 8 || charCode == 9 || charCode == 13) {
+            return true;
+        }
+        // Allow: Ctrl+A
+        if (evt.ctrlKey && charCode == 65) {
+            return true;
+        }
+        // Ensure that it is a number and only one decimal point
+        if (charCode < 48 || charCode > 57) {
+            return false;
+        }
+        return true;
+    }
+</script>
+{% endblock %}

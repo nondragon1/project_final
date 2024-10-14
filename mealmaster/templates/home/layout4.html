@@ -254,8 +254,13 @@ body {
     <div class="search-container">
       <form action="/">
         <div class="barcode-container">
-        <a href="/"><img src="{% static '/images/barcodelogo.png' %}" alt="barcodelogo" width="30px" height="30px"></a>
+          <a href="/"><img src="{% static '/images/barcodelogo.png' %}" alt="barcodelogo" width="30px" height="30px"></a>
         </div>
+        {% if request.user.customer.cost == 'Gold' and request.user.customer.diet %}
+        <div class="barcode-container">
+          <a href="/predict"><img src="{% static '/images/scan.jpg' %}" alt="barcodelogo" width="30px" height="30px"></a>
+        </div>
+        {% endif %}
         <input type="text" placeholder="Search.." name="search">
         <button type="submit"><i class="fa fa-search"></i></button>
       </form>

@@ -1,0 +1,47 @@
+{% extends "home/layout2.html" %}
+{% load static %}
+{%block content%}
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .preview-progress {
+            padding: 15px;
+        }
+    </style>
+    <form class="container d-flex flex-column" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label>
+            <span class="btn btn-info">Click to Add Image</span>
+            <input hidden name="image-progress" id="imageInput" type="file"/>
+        </label>
+        <div class="preview-progress d-flex justify-content-center align-items-center">
+            <img id="imagePreview" src="#" alt="Image Preview" style="display:none; max-width: 500px; width: 70%;">
+        </div>
+        <div id="button-submit-image" style="display: none;">
+            <button class="btn btn-success" name="submit-image">บันทึกรูปภาพ</button>
+        </div>
+    </form>
+    <script>
+        document.getElementById('imageInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const previewImage = document.getElementById('imagePreview');
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block'
+                }
+
+                reader.readAsDataURL(file)
+                document.getElementById("button-submit-image").style.display = "block"
+            }
+        });
+    </script>
+{% endblock %}

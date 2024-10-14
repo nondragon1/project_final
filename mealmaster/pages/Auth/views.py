@@ -46,7 +46,6 @@ def register(request):
         password=request.POST.get('password')
         phone=request.POST.get('phone')
         image=request.FILES.get('image')
-        diet=request.POST.get('diet') 
         cost=request.POST.get('cost') 
         # check user ซ้ำ
 
@@ -62,7 +61,7 @@ def register(request):
             password=password,
             phone=phone,
             image=image,
-            diet=diet, 
+            diet=None, 
             cost=cost, 
         )
         # personForm()

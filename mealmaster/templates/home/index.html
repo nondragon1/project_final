@@ -39,39 +39,23 @@
     <div class="bar1">
         <div class="container-recomment">
             <div class="row">
-                {% for menu in menus %}
-                    <div class="col-4 flex-column">
-                        <div class="card-info">
-                            <a href="detailfood/{{menu.value}}"><img src="{{menu.url}}" alt="recomment-food"
-                                    width="100px" height="100px" style="border-radius: 20px;margin: 20px;"></a>
-                            <p>{{menu.name}}</p>
+                {% if menus %}
+                    {% for menu in menus %}
+                        <div class="col-4 flex-column">
+                            <div class="card-info">
+                                <a href="detailfood/{{menu.value}}">
+                                    <img src="{{menu.url}}" alt="recomment-food"
+                                        width="100px" height="100px" style="border-radius: 20px;margin: 20px;">
+                                </a>
+                                <p>{{menu.name}}</p>
+                            </div>
                         </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="w-100 col-4 d-flex justify-content-center align-items-center flex-column">
+                        ไม่พบข้อมูลแนะนำอาหาร
                     </div>
-                {% endfor %}
-                <!-- <div class="col-4 flex-column">
-                    <div class="card-info">
-                        <a href="detailfood/"><img src="{% static '/images/food-recomment1.jpg' %}" alt="recomment-food"
-                                width="100px" height="100px" style="border-radius: 20px;margin: 20px;"></a>
-                        <p>tom yum kung</p>
-                    </div>
-                </div>
-
-                <div class="col-4 flex-column">
-                    <div class="card-info">
-                        <a href="detailfood/"><img src="{% static '/images/food-recomment2.jpg' %}" alt="recomment-food"
-                                width="100px" height="100px" style="border-radius: 20px;margin: 20px;"></a>
-                        <p>tuna salad</p>
-                    </div>
-                </div>
-
-                <div class="col-4 flex-column">
-                    <div class="card-info">
-                        <a href="detailfood/"><img src="{% static '/images/food-recomment3.jpg' %}" alt="recomment-food"
-                                width="100px" height="100px" style="border-radius: 20px;margin: 20px;"></a>
-                        <p>suki pork</p>
-                    </div>
-                </div> -->
-
+                {% endif %}
             </div>
         </div>
     </div>
@@ -84,68 +68,14 @@
     </div>
     <div class="container-menu">
         <div class="row">
-            <div class="col-4 flex-column">
-                <a type="button" class="btn btn-dark" href="/" style="width: 160px;height: 40px;">
-                    <h7>noodles</h7>
+            {% for category in categorys %}
+            <div class="col-4 flex-column mt-1">
+                <a type="button" class="btn btn-dark" href="/category/{{category.id}}" style="width: 160px;height: 40px;">
+                    <h7>{{category.name}}</h7>
                 </a>
             </div>
-
-            <div class="col-4 flex-column">
-                <a type="button" class="btn btn-dark" href="/" style="width: 160px;height: 40px;">
-                    <h7>sweet food</h7>
-                </a>
-            </div>
-
-            <div class="col-4 flex-column">
-                <a type="button" class="btn btn-dark" href="/" style="width: 160px;height: 40px;">
-                    <h7>drink</h7>
-                </a>
-            </div>
-
+            {% endfor %}
         </div>
-        <br>
-        <div class="row">
-            <div class="col-4 flex-column">
-                <a type="button" class="btn btn-dark" href="/" style="width: 160px;height: 40px;">
-                    <h7>fast food</h7>
-                </a>
-            </div>
-
-            <div class="col-4 flex-column">
-                <a type="button" class="btn btn-dark" href="/" style="width: 160px;height: 40px;">
-                    <h7>steak</h7>
-                </a>
-            </div>
-
-            <div class="col-4 flex-column">
-                <a type="button" class="btn btn-dark" href="/" style="width: 160px;height: 40px;">
-                    <h7>snacks food</h7>
-                </a>
-            </div>
-
-        </div>
-        <br>
-        <div class="row">
-            <div class="col-4 flex-column">
-                <a type="button" class="btn btn-dark" href="/" style="width: 160px;height: 40px;">
-                    <h7>Clean food</h7>
-                </a>
-            </div>
-
-            <div class="col-4 flex-column">
-                <a type="button" class="btn btn-dark" href="/" style="width: 160px;height: 40px;">
-                    <h7>One dish meal</h7>
-                </a>
-            </div>
-
-            <div class="col-4 flex-column">
-                <a type="button" class="btn btn-dark" href="/" style="width: 160px;height: 40px;">
-                    <h7>Vegetarian food</h7>
-                </a>
-            </div>
-
-        </div>
-        <br>
     </div>
 </div>
 <br>
