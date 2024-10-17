@@ -21,11 +21,17 @@
         {% for menu in menus %}
             <div class="col-4 flex-column">
                 <div class="d-flex justify-content-center align-items-center flex-column">
+                    {% if request.user.is_authenticated %}
                     <a class="d-flex justify-content-center flex-column" href="/detailfood/{{menu.value}}">
                         <img src="{{menu.url}}" alt="category-food"
                             width="150px" height="150px" style="border-radius: 20px;margin: 20px;">
                         <p class="text-center">{{menu.name}}</p>
                     </a>
+                    {% else %}
+                    <img src="{{menu.url}}" alt="category-food"
+                        width="150px" height="150px" style="border-radius: 20px;margin: 20px;">
+                    <p class="text-center">{{menu.name}}</p>
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}

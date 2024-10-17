@@ -64,7 +64,7 @@ class Diet(models.Model):
 class Menus(models.Model):
     name = models.CharField(max_length=50, blank=True)
     label = models.TextField(blank=True)
-    calorie = models.IntegerField(blank=True)
+    calorie = models.FloatField(blank=True)
     url_image = models.ImageField(upload_to="thaimenu",blank=True)
     url_resource = models.TextField(blank=True)
 
@@ -74,7 +74,7 @@ class Category(models.Model) :
 
 class Notify(models.Model) :
     user_id = models.IntegerField(blank=True)
-    datetime = models.DateField(default=timezone.now)
+    datetime = models.DateTimeField(default=timezone.now)
     msg = models.TextField(blank=True)
     status = models.BooleanField(default=False)
 # class 

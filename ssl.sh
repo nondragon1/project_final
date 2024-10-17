@@ -1,0 +1,1 @@
+docker-compose run --rm certbot certonly --webroot --webroot-path=/usr/share/nginx/html -d mealmaster.meecode.website;

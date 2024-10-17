@@ -28,7 +28,7 @@ def detailgoal(request , id_diet):
     if user_data.diet :
         return redirect("/aftergoal")
     else :
-        return render(request,"goal/goal2.html" , {
+        return render(request, f"goal/goals/goal{id_diet}.html" , {
             "id_diet" : id_diet
         })
 

@@ -1,0 +1,149 @@
+{% include "home/layout.html" %}
+{% load static %}
+
+{%block content%}
+
+<style>
+
+.header{
+ text-align: center;
+ margin-top: 20px;
+}
+
+.header2{
+ border: 5px solid black;
+ border-radius: 20px;
+ margin: 0 auto;
+ width: 50%;
+}
+
+.photo{
+ text-align: center;
+}
+
+h6{
+ border: 5px solid black;
+ border-radius: 30px;
+ padding: 10px;
+ text-align: center;
+}
+
+.container{
+ margin-top: 30px;
+}
+
+.row{
+ text-align: center;
+}
+
+</style>
+
+<div class="header">
+    <h1>Desired Result</h1>
+    <div class="header2">
+        <h2>Paleo Diet</h2>
+    </div>
+</div>
+
+<div class="photo">
+    <img src="{% static '/images/goal/Paleo_Diet.jpg' %}" alt="pic-model" style="width: 300px ; height: 300px;margin-top: 30px;">
+</div>
+
+<div class="container">
+    <h6>Who is the Paleo Diet Suitable For?</h6>
+    <br>
+    <p>* Those looking to lose weight quickly</p>
+    <p>* Individuals with digestive issues</p>
+    <p>* People who are overweight (BMI of 23 or higher)</p>
+    <p>* Anyone facing health problems related to excess weight</p>
+<br>
+<br>
+    <p>The Paleo Diet mimics the eating habits of our ancestors, dating back to the Paleolithic era. 
+        This diet consists of 100% natural foods with no additives. It focuses on proteins, fruits, 
+        and vegetables, while excluding bread, processed foods, and dairy products. Following this diet consistently
+        can help with weight loss, reduce fat, and improve body shape. This is why many celebrities and models, who need to
+        maintain their weight and physique, are drawn to the Paleo trend.</p>
+    <br>
+    <p>The Paleo Diet draws its inspiration from the diet of cave-dwelling humans, 
+        who primarily consumed foods provided by nature, such as lean meats, fish, nuts, seeds, vegetables,
+        fruits, and herbs, all in their natural forms. This resembles modern clean eating.</p>
+    <br>
+    <p>The principle behind the Paleo Diet is to encourage the body to use dietary fat and stored fat for energy instead of 
+        carbohydrates, a process known as "ketosis." Importantly, the fats consumed should be healthy ones, making the Paleo 
+        approach a highly suitable nutritional strategy for humans.</p>   
+    <br> 
+    <br>
+    <br>
+    <h6>What Can You Eat on the Paleo Diet?</h6>
+    <br>
+    <p>The Paleo Diet does not have a strict eating schedule but emphasizes clear proportions. It resembles a ketogenic diet in that
+        it involves low carbohydrate intake while focusing on protein, fruits, vegetables, and healthy fats. However, unlike the ketogenic 
+        diet, the Paleo Diet allows for a wider variety of foods, including natural sugars from sources like honey or maple syrup.</p>
+    <br>
+    <br>
+    <h6>Here is a breakdown of what to eat on the Paleo Diet:</h6>
+    <br>
+    <p>- Vegetables (40%): Focus on a variety of low-carb vegetables such as leafy greens, carrots, spinach, 
+        broccoli, onions, cucumbers, cauliflower, eggplant, and asparagus.</p>
+    <p>- Protein (30%): Consume lean meats and low-sugar fruits and vegetables.</p>
+    <p>- Healthy Fats (15%): Include fats from fish, nuts, avocados, olive oil, coconut oil, and fish oil.</p>
+    <p>- Low-Carb Fruits and Nuts (15%): Choose low-sugar fruits like berries and apples, 
+        and nuts such as black beans and white beans.</p>
+    <p>- Avoid dairy products for at least 30 days.</p> 
+    <p>- Opt for organic ingredients.</p>
+    <p>- Limit seasonings like salt, sugar, and MSG.</p>   
+    <p>- Avoid processed foods.</p>
+    <p>- Refrain from alcohol.</p>
+    <p>- Drink plenty of water (1.5-2 liters per day).</p>
+    <br>
+    <p>The goal of the Paleo Diet is to return to the dietary patterns of ancient humans by choosing organic, 
+    chemical-free foods, avoiding processed items, and minimizing additives to promote health and facilitate weight loss.</p>    
+    <br>
+    <br>
+    <h6>Benefits of the Paleo Diet</h6>
+    <br>
+    <p>The Paleo Diet is characterized by low calories and carbohydrates sourced from vegetables rather than wheat. 
+    It emphasizes high protein and healthy fats, encouraging the body to burn fat for energy instead of carbohydrates. 
+    The vitamins and fiber from fruits and vegetables can also improve digestion. Here are some benefits:</p>
+    <br>
+    <p>- Effective weight loss</p>
+    <p>- Strong muscle development</p>
+    <p>- Enhanced metabolic function</p>
+    <p>- Reduced fat and lower risk of serious diseases</p>
+    <p>- Improved digestive health</p>
+    <p>- Better blood circulation</p>
+    <p>- Strengthened immune system</p>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="row">
+        <div class="col-6 flex-column">
+            <a type="button" class="btn btn-secondary" href="{% url 'goal' %}" style="width: 400px;height: 50px;"><h4>return</h4></a>
+        </div>
+
+        <div class="col-6 flex-column">
+            <a type="button" class="btn btn-success" href="/detailgoalfat/{{ id_diet }}" style="width: 400px;height: 50px;"><h4>submit</h4></a>
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+</div>
+
+
+
+{% endblock %}

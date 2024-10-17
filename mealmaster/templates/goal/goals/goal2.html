@@ -1,0 +1,150 @@
+{% include "home/layout.html" %}
+{% load static %}
+
+{%block content%}
+
+<style>
+
+.header{
+ text-align: center;
+ margin-top: 20px;
+}
+
+.header2{
+ border: 5px solid black;
+ border-radius: 20px;
+ margin: 0 auto;
+ width: 50%;
+}
+
+.photo{
+ text-align: center;
+}
+
+h6{
+ border: 5px solid black;
+ border-radius: 30px;
+ padding: 10px;
+ text-align: center;
+}
+
+.container{
+ margin-top: 30px;
+}
+
+.row{
+ text-align: center;
+}
+
+</style>
+
+<div class="header">
+    <h1>Desired Result</h1>
+    <div class="header2">
+        <h2>Atkins Diet</h2>
+    </div>
+</div>
+
+<div class="photo">
+    <img src="{% static '/images/goal/Atkins_Diet.jpeg' %}" alt="pic-model" style="width: 300px ; height: 300px;margin-top: 30px;">
+</div>
+
+<div class="container">
+    <h6>What is Atkins Diet</h6>
+    <br>
+    <p>The Atkins Diet is a popular weight loss trend designed for those with obesity. 
+    It emphasizes a "low-carb, high-protein" approach. Developed by Dr. Robert C. Atkins, a cardiologist,
+    the diet is based on the idea that reducing carbohydrates while increasing protein intake helps curb appetite, 
+    leading to reduced calorie consumption and weight loss.</p>
+<br>
+<br>
+    <h6>How Atkins Diet Works</h6>
+    <br>
+    <p>The Atkins Diet posits that excess weight can stem from two main issues: high consumption of unhealthy carbohydrates 
+    (like processed foods) and insulin resistance, where the body fails to respond effectively to insulin. 
+    This can lead to weight gain and increased risk of diabetes. 
+    The Atkins approach restricts carbohydrate intake to under 40 grams per day,
+    focusing on protein and fats instead. This state, known as ketosis, allows the body to burn fat for energy, 
+    helping to reduce hunger and calorie intake.</p>
+    <br>
+    <br>
+    <h6>Phases of the Atkins Diet</h6>
+    <br>
+    <p>The Atkins Diet is divided into four phases:</p>
+    <br>
+    <p>1. Phase 1: Induction(14 days)</p>
+    <p>- Limit carbohydrates to 20-25 grams daily.</p>
+    <p>- Focus on high fats and proteins while consuming low-carb vegetables to promote fat burning.</p>
+    <br>
+    <p>2. Phase 2: Balance</p>
+    <p>- Once weight loss is steady, increase carb intake to 50 grams per day while continuing to eat high-protein and high-fat foods.</p>
+    <br>
+    <p>3. Phase 3: Pre-Maintenance</p>
+    <p>- As weight loss continues, gradually increase carbs to a maximum of 80 grams per day.</p>
+    <br>
+    <p>4. Phase 4: Maintenance</p>
+    <p>- Maintain your target weight while allowing for higher carb intake, focusing on healthy, unrefined carbohydrates.</p>
+    <br>
+    <br>
+    <br>
+    <h6>Atkins Diet Pyramid</h6>
+    <br>
+    <p>The food categories in the Atkins Diet are structured in a pyramid:</p>
+    <br>
+    <p>- Protein (80%): Emphasize meats, fish, and plant-based protein sources.</p>
+    <p>- Healthy Fats (10%): Include sources like olive oil and nuts.</p>
+    <p>- Good Carbohydrates (10%): Focus on low-carb vegetables and fruits.</p>
+    <br>
+    <br>
+    <br>
+    <h6>Benefits of the Atkins Diet</h6>
+    <br>
+    <p>- Allows gradual adaptation, minimizing fatigue or adverse side effects.</p>
+    <p>- High protein and fat intake prevents hunger.</p>
+    <p>- Effective for reducing weight, sugar, fat, and blood pressure rapidly.</p>
+    <br>
+    <br>
+    <h6>Drawbacks of the Atkins Diet</h6>
+    <br>
+    <p>- Not suitable for diabetics, as it may lead to low blood sugar.</p>
+    <p>- Inappropriate for kidney patients, pregnant women, or nursing mothers.</p>
+    <p>- Requires a complete overhaul of eating habits</p>
+    <p>- Strict carb and sugar limits may cause stress for some.</p>
+    <p>- Risk of nutritional deficiencies due to restricted food types.</p>
+    <p>- Not advisable for long-term adherence.</p>
+    <p>- Possible mild side effects include headaches, fatigue, and constipation from fat metabolism.</p>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="row">
+        <div class="col-6 flex-column">
+            <a type="button" class="btn btn-secondary" href="{% url 'goal' %}" style="width: 400px;height: 50px;"><h4>return</h4></a>
+        </div>
+
+        <div class="col-6 flex-column">
+            <a type="button" class="btn btn-success" href="/detailgoalfat/{{ id_diet }}" style="width: 400px;height: 50px;"><h4>submit</h4></a>
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+</div>
+
+
+
+{% endblock %}

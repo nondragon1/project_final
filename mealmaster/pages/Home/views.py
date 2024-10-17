@@ -35,40 +35,46 @@ def index (request):
             sweetify.success(request, 'ไม่พบผู้ใช้', timer=3000)
             return redirect("/login")
         
-    return render(request,"home/index.html")
-
-def detailfood(request , id_image):
-    menu_data = Menus.objects.filter(id=id_image).values("id" , "url_image")
-    return render(request,"home/detailfood.html" , {
-        "url_image" : menu_data[0].get("url_image"),
-        "menu_id" : menu_data[0].get("id")
+    categorys = Category.objects.values("id" , "name")
+    return render(request,"home/index.html" , {
+        "categorys" : categorys
     })
 
-def detailfoodAdd(request , menu_id) :
-    user_id = request.user.id
-    profile = customer.objects.get(user_id=user_id)
-    number = 1
+def detailfood(request , id_image):
+    menu_data = Menus.objects.filter(id=id_image).values("id" , "url_image" , "calorie")
+    return render(request,"home/detailfood.html" , {
+        "url_image" : menu_data[0].get("url_image"),
+        "menu_id" : menu_data[0].get("id"),
+        "calorie" : menu_data[0].get("calorie"),
+    })
 
-    if menu_id and number and user_id :
-        try :
-            diet_round_id = profile.diet
-            if diet_round_id :
-                foodCalorie = FoodCalorie(
-                    diet_round_id=diet_round_id,
-                    user_id=user_id,
-                    menu_id=menu_id,
-                    rate_eat=number
-                )
+def detailfoodAdd(request) :
+    if request.POST :
+        user_id = request.user.id
+        profile = customer.objects.get(user_id=user_id)
+        menu_id = request.POST.get("menu_id")
+        number = request.POST.get("number")
 
-                foodCalorie.save()
-                sweetify.success(request, 'Eat !!', timer=3000)
+        if menu_id and number and user_id :
+            try :
+                diet_round_id = profile.diet
+                if diet_round_id :
+                    foodCalorie = FoodCalorie(
+                        diet_round_id=diet_round_id,
+                        user_id=user_id,
+                        menu_id=menu_id,
+                        rate_eat=number
+                    )
+
+                    foodCalorie.save()
+                    sweetify.success(request, 'Eat !!', timer=3000)
+                    return redirect(f"/")
+                else :
+                    sweetify.success(request, 'Please select Diet!', timer=3000)
+                    return redirect(f"/")
+            except :
+                sweetify.success(request, 'No data !!', timer=3000)
                 return redirect(f"/")
-            else :
-                sweetify.success(request, 'Please select Diet!', timer=3000)
-                return redirect(f"/")
-        except :
-            sweetify.success(request, 'No data !!', timer=3000)
-            return redirect(f"/")
 
 def views(request):
     return render(request,"home/home.html")

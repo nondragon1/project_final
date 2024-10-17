@@ -31,13 +31,14 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    '7f12-1-47-196-51.ngrok-free.app',
+    'mealmaster.meecode.website'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost',
     'http://127.0.0.1',
-    'https://7f12-1-47-196-51.ngrok-free.app',
+    'http://mealmaster.meecode.website',
+    'https://mealmaster.meecode.website'
 ]
 
 
@@ -52,11 +53,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'mealmaster',
     # 'Home',
-    'Goal',
-    'Diary',
-    'Feed',
+    # 'Goal',
+    # 'Diary',
+    # 'Feed',
     'sweetify',
-    'Flaskapi',
+    # 'Flaskapi',
     'rest_framework',
 ]
 
@@ -101,8 +102,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'webapp_project',
-        'HOST': 'mysql_workout',
-        # 'HOST': '54.169.211.200',
+        # 'HOST': 'mysql_workout',
+        'HOST': '54.169.211.200',
         'USER': 'root',
         'PASSWORD': 'workout',
     }

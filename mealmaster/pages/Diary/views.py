@@ -32,7 +32,7 @@ def diary(request):
             food_calorie.append({
                 "name" : food[0],
                 "datetime" : food[1],
-                "calorie" : int(food[2]),
+                "calorie" : food[2],
                 "time_of_day" : food[3]
             })
             total += int(food[2])
@@ -68,7 +68,7 @@ def diary(request):
                     food_calorie_history.append({
                         "name" : food_history[0],
                         "datetime" : food_history[1],
-                        "calorie" : int(food_history[2]),
+                        "calorie" : food_history[2],
                         "time_of_day" : food_history[3]
                     })
         except :

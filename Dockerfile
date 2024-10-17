@@ -1,4 +1,5 @@
-FROM python:3.9
+FROM thanawat1303/workout-app:0.0.2
+# FROM python:3.9
 # FROM python:3.9-slim
 
 COPY ./requirements.txt /app/requirements.txt
