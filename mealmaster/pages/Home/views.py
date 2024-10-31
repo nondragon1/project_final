@@ -1,6 +1,7 @@
 from mealmaster.models import customer , Diet , Menus , DietUser , FoodCalorie , Category
 from django.shortcuts import render , redirect
 import sweetify
+from datetime import datetime , timedelta , timezone
 
 def index (request):
     if request.user.is_authenticated :
@@ -54,16 +55,26 @@ def detailfoodAdd(request) :
         profile = customer.objects.get(user_id=user_id)
         menu_id = request.POST.get("menu_id")
         number = request.POST.get("number")
+        date_str = request.POST.get("date")
+        time_str = request.POST.get("time")
 
-        if menu_id and number and user_id :
+        if menu_id and number and time_str and user_id :
             try :
                 diet_round_id = profile.diet
                 if diet_round_id :
+                    
+                    date_obj = datetime.strptime(date_str, "%Y-%m-%d").date()
+                    # (datetime.now(timezone.utc) + timedelta(hours=7)).date()
+                    time_obj = datetime.strptime(time_str, "%H:%M").time()
+                    combined_datetime = datetime.combine(date_obj, time_obj)
+                    utc_datetime = combined_datetime - timedelta(hours=7)
+
                     foodCalorie = FoodCalorie(
                         diet_round_id=diet_round_id,
                         user_id=user_id,
                         menu_id=menu_id,
-                        rate_eat=number
+                        rate_eat=number,
+                        datetime=utc_datetime
                     )
 
                     foodCalorie.save()
@@ -96,5 +107,15 @@ def category(request , category_id) :
 
     return render(request , "home/category.html" , {
         "title" : category_data.name,
+        "menus" : menus
+    })
+
+def search(request) :
+    menu_search = request.GET.get("s")
+    menus = []
+    if menu_search :
+        menus = Menus.objects.filter(name__contains=menu_search).values("id" , "url_resource" , "name")
+        
+    return render(request , "home/search.html" , {
         "menus" : menus
     })

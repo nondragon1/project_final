@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.http import JsonResponse
 
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -11,6 +10,8 @@ import io , os
 from pathlib import Path
 from mealmaster.models import Menus , FoodCalorie , customer
 from uuid import uuid4
+
+from datetime import datetime , timezone , timedelta
 
 from fastai.vision.all import (
     load_learner
@@ -120,8 +121,8 @@ def SelectMenu(request) :
         "status_response" : 400
     }
     user_id = request.user.id
-    menu_id = request.POST["menu_id"]
-    number = request.POST["number"]
+    menu_id = request.POST.get("menu_id")
+    number = request.POST.get("number")
 
     profile = customer.objects.get(user_id=user_id)
     
@@ -129,11 +130,24 @@ def SelectMenu(request) :
         try :
             diet_round_id = profile.diet
             if diet_round_id :
+                date_str = request.POST.get("date")
+                time_str = request.POST.get("time")
+                if time_str :
+                    date_obj = datetime.strptime(date_str, "%Y-%m-%d").date() 
+                    # (datetime.now(timezone.utc) + timedelta(hours=7)).date()
+                    time_obj = datetime.strptime(time_str, "%H:%M").time()
+                    combined_datetime = datetime.combine(date_obj, time_obj)
+                    utc_datetime = combined_datetime - timedelta(hours=7)
+                else :
+                    utc_datetime = datetime.now(timezone.utc)
+
                 foodCalorie = FoodCalorie(
                     diet_round_id=diet_round_id,
                     user_id=user_id,
                     menu_id=menu_id,
-                    rate_eat=number
+                    rate_eat=number,
+                    datetime=utc_datetime,
+                    image_upload=request.FILES.get('image-predict')
                 )
 
                 foodCalorie.save()
@@ -148,7 +162,8 @@ def SelectMenu(request) :
                     "status" : "error",
                     "status_response" : 403,
                 }
-        except :
+        except Exception as err :
+            print(err)
             object_return = {
                 "title" : "Please enter data",
                 "status" : "error",

@@ -1,94 +1,63 @@
 {% include "home/layout.html" %}
+{% include "goal/goals/goal_style.html" %}
 {% load static %}
 
 {%block content%}
 
-<style>
-
-.header{
- text-align: center;
- margin-top: 20px;
-}
-
-.header2{
- border: 5px solid black;
- border-radius: 20px;
- margin: 0 auto;
- width: 50%;
-}
-
-.photo{
- text-align: center;
-}
-
-h6{
- border: 5px solid black;
- border-radius: 30px;
- padding: 10px;
- text-align: center;
-}
-
-.container{
- margin-top: 30px;
-}
-
-.row{
- text-align: center;
-}
-
-</style>
-
-<div class="header">
-    <h1>Desired Result</h1>
-    <div class="header2">
-        <h2>Basal Metabolic Rate (BMR)</h2>
-    </div>
-</div>
-
-<div class="photo">
-    <img src="{% static '/images/goal/bmr.jpg' %}" alt="pic-model" style="width: 300px ; height: 300px;margin-top: 30px;">
-</div>
-
-<div class="container">
-    <h6>What is BMR and how important it is to health?</h6>
-    <br>
-    <p>Calculating BMR helps you know the minimum amount of calories or energy your body needs to perform basic bodily functions such as 
-        breathing, digesting food, pumping blood, regulating body temperature, growing hair, producing or repairing body cells, 
-        and maintaining the right levels of essential chemicals in your body.</p>
-    <p>In addition, studies in mice have found that mice with low BMR tend to gain weight and may be more prone to insulin resistance, 
-        while those with high BMR may help delay the onset of type 2 diabetes. However, the results still need to be studied further.</p>
-<br>
-<br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <div class="row">
-        <div class="col-6 flex-column">
-            <a type="button" class="btn btn-secondary" href="{% url 'goal' %}" style="width: 400px;height: 50px;"><h4>return</h4></a>
-        </div>
-
-        <div class="col-6 flex-column">
-            <a type="button" class="btn btn-success" href="/detailgoalfat/{{ id_diet }}" style="width: 400px;height: 50px;"><h4>submit</h4></a>
+<div class="goal-content">
+    <div class="header">
+        <!-- <h1>Desired Result</h1> -->
+        <div class="header2">
+            <h2>Basal Metabolic Rate (BMR)</h2>
         </div>
     </div>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
+    
+    <div class="photo">
+        <img src="{% static '/images/goal/bmr.jpg' %}" alt="pic-model">
+    </div>
+    
+    <div class="container">
+        <h6>What is BMR and how important it is to health?</h6>
+        <br>
+        <p>Calculating BMR helps you know the minimum amount of calories or energy your body needs to perform basic bodily
+            functions such as
+            breathing, digesting food, pumping blood, regulating body temperature, growing hair, producing or repairing body
+            cells,
+            and maintaining the right levels of essential chemicals in your body.</p>
+        <p>In addition, studies in mice have found that mice with low BMR tend to gain weight and may be more prone to
+            insulin resistance,
+            while those with high BMR may help delay the onset of type 2 diabetes. However, the results still need to be
+            studied further.</p>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <div class="row" style="width: 100%;">
+            <div class="col-6 flex-column">
+                <a type="button" class="btn btn-secondary" href="{% url 'goal' %}" 
+                    style="width: 100%;height: 50px; display: flex; justify-content: center; align-items: center;">
+                    <h4 style="margin: 0;">return</h4>
+                </a>
+            </div>
+    
+            <div class="col-6 flex-column">
+                <a type="button" class="btn btn-success" href="/detailgoalfat/{{ id_diet }}"
+                    style="width: 100%;height: 50px; display: flex; justify-content: center; align-items: center;">
+                    <h4 style="margin: 0;">submit</h4>
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
-
-
 
 {% endblock %}

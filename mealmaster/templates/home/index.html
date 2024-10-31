@@ -3,87 +3,161 @@
 {%block content%}
 
 <style>
-    .recomment-bar {
-        text-align: center;
+    body {
+        background-image: url("{% static '/images/foods.jpg' %}");
+        background-repeat: no-repeat;
+        background-size: cover;
     }
 
-    h2 {
-        margin-top: 20px;
+    .header-menu {
+        margin-top: 15px;
+    }
+
+    .header-menu h2 {
+        font-weight: 900;
+        color: rgb(30, 102, 113);
+        font-size: 25px;
     }
 
     .container-recomment {
-        border: 5px solid black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        /* border: 5px solid black; */
+        background-color: rgba(255, 255, 255, 0.752);
+        backdrop-filter: blur(10px);
         border-radius: 20px;
-        width: 50%;
+        width: 85%;
+        max-width: 600px;
         margin: 0 auto;
     }
 
+    .container-recomment img {
+        box-shadow: 0px 0px 8px rgb(54, 140, 154);
+    }
+
+    .container-recomment p,
+    .container-recomment a {
+        color: rgb(54, 140, 154);
+        text-align: center;
+    }
+
     .category-food {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        /* border: 5px solid black; */
+        background-color: rgba(255, 255, 255, 0.752);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        width: 85%;
+        max-width: 600px;
+        margin: 25px auto;
+    }
+
+    .category-food p,
+    .category-food a {
         text-align: center;
     }
 
     .container-menu {
-        border: 5px solid black;
+        /* border: 5px solid black; */
         border-radius: 20px;
-        width: 50%;
-        margin: 0 auto;
+        width: 100%;
+        /* margin: 0 auto; */
         padding: 10px;
+    }
+
+    .container-menu a[type="button"] {
+        background-color: rgb(54, 140, 154);
+        border-radius: 15px;
+        color: white;
+        font-weight: 600;
+        box-shadow: 0px 0px 8px rgb(54, 140, 154);
+    }
+
+    .category-li {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+
+    }
+
+    .category-li a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        max-width: 160px;
+        height: 40px;
+    }
+
+    /* respon */
+
+    @media only screen and (max-width: 630px) {
+        .header-menu h2 {
+            font-size: 18px;
+        }
+
+        .category-li a {
+            font-size: 12px;
+        }
+    }
+
+    @media only screen and (max-width: 400px) {
+        .header-menu h2 {
+            font-size: 18px;
+        }
+
+        .category-li a {
+            font-size: 12px;
+        }
     }
 </style>
 
-{% if request.user.is_authenticated %}
-<div class="recomment-bar">
-    <div class="header-recomment">
-        <h2>RECOMMEND</h2>
-    </div>
-    <div class="bar1">
-        <div class="container-recomment">
-            <div class="row">
-                {% if menus %}
-                    {% for menu in menus %}
-                        <div class="col-4 flex-column">
-                            <div class="card-info">
-                                <a href="detailfood/{{menu.value}}">
-                                    <img src="{{menu.url}}" alt="recomment-food"
-                                        width="100px" height="100px" style="border-radius: 20px;margin: 20px;">
-                                </a>
-                                <p>{{menu.name}}</p>
-                            </div>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="w-100 col-4 d-flex justify-content-center align-items-center flex-column">
-                        ไม่พบข้อมูลแนะนำอาหาร
-                    </div>
-                {% endif %}
-            </div>
+<div class="content-body foods-bg">
+    {% if request.user.is_authenticated %}
+    {% if menus %}
+    <div class="container-recomment">
+        <div class="header-menu">
+            <h2>RECOMMEND</h2>
         </div>
-    </div>
-</div>
-{% endif %}
-
-<div class="category-food">
-    <div class="header-menu">
-        <h2>CATEGORY</h2>
-    </div>
-    <div class="container-menu">
         <div class="row">
-            {% for category in categorys %}
-            <div class="col-4 flex-column mt-1">
-                <a type="button" class="btn btn-dark" href="/category/{{category.id}}" style="width: 160px;height: 40px;">
-                    <h7>{{category.name}}</h7>
-                </a>
+            {% for menu in menus %}
+            <div class="col-12 col-sm-6 col-md-6 d-flex justify-content-start align-items-center flex-column">
+                <div class="card-info">
+                    <a href="detailfood/{{menu.value}}" style="width: 100%; display: block;">
+                        <img src="{{menu.url}}" alt="recomment-food"
+                            style="max-width: 100px;border-radius: 20px;margin: 20px;margin-bottom: 10px; aspect-ratio: 1/1;width: calc(100% - 40px);">
+                    </a>
+                    <p>{{menu.name}}</p>
+                </div>
             </div>
             {% endfor %}
         </div>
     </div>
+    {% endif %}
+    {% endif %}
+
+    <div class="category-food">
+        <div class="header-menu">
+            <h2>CATEGORY</h2>
+        </div>
+        <div class="container-menu">
+            <div class="row w-100 m-0">
+                {% for category in categorys %}
+                <div class="col-lg-4 col-md-4 col-6 flex-column mt-2 category-li">
+                    <a type="button" class="btn" href="/category/{{category.id}}">
+                        <h7>{{category.name}}</h7>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 </div>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 
 {% endblock %}

@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 
 # Create your models here.
-
 class adminModel(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=50, blank=True)
@@ -41,6 +40,7 @@ class FoodCalorie(models.Model):
     menu_id = models.IntegerField(blank=True)
     rate_eat = models.FloatField(default=0.0 , blank=True)
     datetime = models.DateTimeField(default=timezone.now)
+    image_upload = models.ImageField(upload_to="predict",blank=True)
 
 class ExerciseCalorie(models.Model):
     diet_round_id = models.IntegerField(blank=True , null=True)

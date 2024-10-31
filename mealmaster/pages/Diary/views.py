@@ -2,22 +2,28 @@ from mealmaster.models import ImageBody , FoodCalorie , Menus
 from django.shortcuts import render , redirect
 from django.db import connection
 import sweetify
+from django.http import JsonResponse
 
 from datetime import datetime , timedelta , timezone
 
 def diary(request):
     user_id = request.user.id
-    Images_progress = ImageBody.objects.filter(user_id=user_id).values("url_image" , "datetime").order_by("datetime")
+    # Images_progress = ImageBody.objects.filter(user_id=user_id).values("url_image" , "datetime").order_by("datetime")
     
     with connection.cursor() as cursor :
         cursor.execute(f"""
-            SELECT m.name , DATE_ADD(f.datetime , INTERVAL 7 HOUR) , m.calorie * f.rate_eat ,
-                CASE 
-                    WHEN TIME(DATE_ADD(f.datetime , INTERVAL 7 HOUR)) BETWEEN '00:00:00' AND '11:59:59' THEN 'Breakfast'
-                    WHEN TIME(DATE_ADD(f.datetime , INTERVAL 7 HOUR)) BETWEEN '12:00:00' AND '17:59:59' THEN 'Lunch'
-                    WHEN TIME(DATE_ADD(f.datetime , INTERVAL 7 HOUR)) BETWEEN '18:00:00' AND '23:59:59' THEN 'Dinner'
-                    ELSE 'Unknown'
-                END AS time_of_day
+            SELECT 
+                f.id ,
+                m.name , 
+                -- DATE_ADD(f.datetime , INTERVAL 7 HOUR) , 
+                TIME(DATE_ADD(f.datetime , INTERVAL 7 HOUR)) , 
+                m.calorie * f.rate_eat
+                -- CASE 
+                --     WHEN TIME(DATE_ADD(f.datetime , INTERVAL 7 HOUR)) BETWEEN '00:00:00' AND '11:59:59' THEN 'Breakfast'
+                --     WHEN TIME(DATE_ADD(f.datetime , INTERVAL 7 HOUR)) BETWEEN '12:00:00' AND '17:59:59' THEN 'Lunch'
+                --     WHEN TIME(DATE_ADD(f.datetime , INTERVAL 7 HOUR)) BETWEEN '18:00:00' AND '23:59:59' THEN 'Dinner'
+                --     ELSE 'Unknown'
+                -- END AS time_of_day
             FROM {FoodCalorie._meta.db_table} f
             LEFT JOIN {Menus._meta.db_table} m ON m.id = f.menu_id
             WHERE user_id = %(user_id)s AND
@@ -30,29 +36,37 @@ def diary(request):
         total = 0
         for food in cursor.fetchall() :
             food_calorie.append({
-                "name" : food[0],
-                "datetime" : food[1],
-                "calorie" : food[2],
-                "time_of_day" : food[3]
+                "id" : food[0],
+                "name" : food[1],
+                # "datetime" : food[1],
+                "time" : food[2].strftime("%H:%M"),
+                "calorie" : food[3],
+                # "time_of_day" : food[4]
             })
-            total += int(food[2])
+            total += int(food[3])
         
     days_history = []
     food_calorie_history = []
     day_selected = ""
+    day_selected_template = ""
     if request.GET.get('date') :
         day_selected = request.GET.get('date')
         try :
-            day_selected_query = datetime.fromtimestamp(float(day_selected)).strftime('%Y-%m-%d %H:%M:%S')
+            day_selected_convert = datetime.fromtimestamp(float(day_selected)) + timedelta(hours=7)
+            day_selected_query = day_selected_convert.strftime('%Y-%m-%d %H:%M:%S')
+            day_selected_template = day_selected_convert.strftime('%Y-%m-%d')
             with connection.cursor() as cursor :
                 cursor.execute(f"""
-                    SELECT m.name , DATE_ADD(f.datetime , INTERVAL 7 HOUR) , m.calorie * f.rate_eat ,
-                        CASE 
-                            WHEN TIME(DATE_ADD(f.datetime , INTERVAL 7 HOUR)) BETWEEN '00:00:00' AND '11:59:59' THEN 'Breakfast'
-                            WHEN TIME(DATE_ADD(f.datetime , INTERVAL 7 HOUR)) BETWEEN '12:00:00' AND '17:59:59' THEN 'Lunch'
-                            WHEN TIME(DATE_ADD(f.datetime , INTERVAL 7 HOUR)) BETWEEN '18:00:00' AND '23:59:59' THEN 'Dinner'
-                            ELSE 'Unknown'
-                        END AS time_of_day
+                    SELECT m.name , 
+                        -- DATE_ADD(f.datetime , INTERVAL 7 HOUR) , 
+                        TIME(DATE_ADD(f.datetime , INTERVAL 7 HOUR)) , 
+                        m.calorie * f.rate_eat
+                        -- CASE 
+                        --     WHEN TIME(DATE_ADD(f.datetime , INTERVAL 7 HOUR)) BETWEEN '00:00:00' AND '11:59:59' THEN 'Breakfast'
+                        --     WHEN TIME(DATE_ADD(f.datetime , INTERVAL 7 HOUR)) BETWEEN '12:00:00' AND '17:59:59' THEN 'Lunch'
+                        --     WHEN TIME(DATE_ADD(f.datetime , INTERVAL 7 HOUR)) BETWEEN '18:00:00' AND '23:59:59' THEN 'Dinner'
+                        --     ELSE 'Unknown'
+                        -- END AS time_of_day
                     FROM {FoodCalorie._meta.db_table} f
                     LEFT JOIN {Menus._meta.db_table} m ON m.id = f.menu_id
                     WHERE user_id = %(user_id)s AND
@@ -67,11 +81,12 @@ def diary(request):
                 for food_history in cursor.fetchall() :
                     food_calorie_history.append({
                         "name" : food_history[0],
-                        "datetime" : food_history[1],
+                        # "datetime" : food_history[1],
+                        "time" : food_history[1].strftime("%H:%M"),
                         "calorie" : food_history[2],
-                        "time_of_day" : food_history[3]
+                        # "time_of_day" : food_history[3]
                     })
-        except :
+        except Exception as err :
             pass
 
     for count_day in range(0 , 3) :
@@ -84,15 +99,35 @@ def diary(request):
 
     days_history.reverse()
     return render(request,"diary/diary.html" , {
-        "images" : Images_progress,
+        # "images" : Images_progress,
         "food_calorie" : food_calorie,
         "total" : total,
         "list_stage" : ["Breakfast", "Lunch", "Dinner"],
         "days_history" : {
             "days" : days_history,
-            "foods_calorie" : food_calorie_history
+            "foods_calorie" : food_calorie_history,
+            "default" : day_selected_template
         }
     })
+
+def delete_food(request) :
+    if request.method == "POST" :
+        user_id = request.user.id
+        id_food = request.POST.get("id_food")
+
+        food_eat = FoodCalorie.objects.get(id=id_food)
+
+        if food_eat.user_id == user_id :
+            food_eat.delete()
+            return JsonResponse(
+                data={},
+                status=200
+            )
+        else :
+            return JsonResponse(
+                data={},
+                status=400
+            )
 
 def add_progress(request):
     # if request.method == "POST" :

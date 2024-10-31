@@ -7,9 +7,9 @@ from datetime import timedelta , datetime , timezone
 
 def CalculateBMR(gender : str , weight : int , height : int , age : int) :
     if gender == "Male" :
-        return 66 + (13.7 * weight) + (5 * height) - (6.8 * age)
+        return 1.2 * (66 + (13.7 * weight) + (5 * height) - (6.8 * age))
     elif gender == "Female" :
-        return 65 + (9.6 * weight) + (1.8 * height) - (4.7 * age)
+        return 1.2 * (665 + (9.6 * weight) + (1.8 * height) - (4.7 * age))
 
 def goal(request):
     user_id = request.user.id
@@ -39,7 +39,8 @@ def detailgoalfat(request , id_diet):
         return redirect("/aftergoal")
     else :
         return render(request,"goal/goal3.html" , {
-            "id_diet" : id_diet
+            "id_diet" : id_diet,
+            "gender" : "men" if user_data.gender == "Male" else "women"
         })
 
 def aftergoal(request):
@@ -50,11 +51,19 @@ def aftergoal(request):
     height = user_data.height
     age = user_data.age
 
+    date_selected = request.GET.get("date")
+    day_selected_query = None
+    day_selected_template = ""
+    if not date_selected == None :
+        day_selected_convert = datetime.fromtimestamp(float(date_selected)) + timedelta(hours=7)
+        day_selected_query = day_selected_convert.strftime('%Y-%m-%d %H:%M:%S')
+        day_selected_template = day_selected_convert.strftime('%Y-%m-%d') 
+
     user_bmr = int(CalculateBMR(gender , weight , height , age))
 
     with connection.cursor() as cursor :
-        cursor.execute(f"""
-            SELECT m.name , DATE_ADD(f.datetime , INTERVAL 7 HOUR) , m.calorie * f.rate_eat ,
+        select_date = (
+            """
                 CASE 
                     WHEN 
                         DATE(DATE_ADD(f.datetime, INTERVAL 7 HOUR)) = DATE(DATE_ADD(NOW(), INTERVAL 7 HOUR))
@@ -64,19 +73,34 @@ def aftergoal(request):
                         THEN 'YESTERDAY'
                     ELSE 'Other'
                 END AS day
+            """ if day_selected_query == None else
+            """
+                "DATE_SELECTED" AS day
+            """
+        )
+
+        where_date = (
+            """
+                AND DATE(DATE_ADD(f.datetime, INTERVAL 7 HOUR)) = DATE(%(date_selected)s)
+            """ if not day_selected_query == None else 
+            ""
+        )
+        cursor.execute(f"""
+            SELECT m.name , DATE_ADD(f.datetime , INTERVAL 7 HOUR) , m.calorie * f.rate_eat , {select_date}
             FROM {DietUser._meta.db_table} du 
             LEFT JOIN {FoodCalorie._meta.db_table} f ON du.id = f.diet_round_id
             LEFT JOIN {Menus._meta.db_table} m ON m.id = f.menu_id
-            WHERE du.id = %(diet_round_id)s AND f.id
+            WHERE du.id = %(diet_round_id)s AND f.id {where_date}
         """ , {
-            "diet_round_id" : user_data.diet
+            "diet_round_id" : user_data.diet,
+            "date_selected" : day_selected_query
         })
 
         food_query = cursor.fetchall()
     
     with connection.cursor() as cursor :
-        cursor.execute(f"""
-            SELECT DATE_ADD(exer.datetime , INTERVAL 7 HOUR) , exer.calorie ,
+        select_date = (
+            """
                 CASE 
                     WHEN 
                         DATE(DATE_ADD(exer.datetime, INTERVAL 7 HOUR)) = DATE(DATE_ADD(NOW(), INTERVAL 7 HOUR))
@@ -86,11 +110,27 @@ def aftergoal(request):
                         THEN 'YESTERDAY'
                     ELSE 'Other'
                 END AS day
+            """ if day_selected_query == None else
+            """
+                "DATE_SELECTED" AS day
+            """
+        )
+
+        where_date = (
+            """
+                AND DATE(DATE_ADD(exer.datetime, INTERVAL 7 HOUR)) = DATE(%(date_selected)s)
+            """ if not day_selected_query == None else 
+            ""
+        )
+        
+        cursor.execute(f"""
+            SELECT DATE_ADD(exer.datetime , INTERVAL 7 HOUR) , exer.calorie , {select_date}
             FROM {DietUser._meta.db_table} du 
             LEFT JOIN {ExerciseCalorie._meta.db_table} exer ON du.id = exer.diet_round_id
-            WHERE du.id = %(diet_round_id)s AND exer.id
+            WHERE du.id = %(diet_round_id)s AND exer.id {where_date}
         """ , {
-            "diet_round_id" : user_data.diet
+            "diet_round_id" : user_data.diet,
+            "date_selected" : day_selected_query
         })
 
         exercise_query = cursor.fetchall()
@@ -99,7 +139,8 @@ def aftergoal(request):
     totals_food = {
         "today" : 0,
         "yesterday" : 0,
-        "Days" : 0
+        "Days" : 0,
+        "date_select" : 0
     }
 
     for food in food_query :
@@ -114,6 +155,8 @@ def aftergoal(request):
             totals_food["today"] += calorie
         if food[3] == "YESTERDAY" :
             totals_food["yesterday"] += calorie
+        if food[3] == "DATE_SELECTED" :
+            totals_food["date_select"] += calorie
 
         totals_food["Days"] += calorie
     
@@ -121,7 +164,8 @@ def aftergoal(request):
     totals_exercise = {
         "today" : 0,
         "yesterday" : 0,
-        "Days" : 0
+        "Days" : 0,
+        "date_select" : 0
     }
 
     for exercise in exercise_query :
@@ -135,35 +179,64 @@ def aftergoal(request):
             totals_exercise["today"] += calorie
         if exercise[2] == "YESTERDAY" :
             totals_exercise["yesterday"] += calorie
+        if exercise[2] == "DATE_SELECTED" :
+            totals_exercise["date_select"] += calorie
 
         totals_exercise["Days"] += calorie
     
     diet_round = DietUser.objects.get(id=user_data.diet)
-    day_diff = ((datetime.now(timezone.utc) + timedelta(hours=7)) - (diet_round.datetime_start + timedelta(hours=7))).days
+
+    day_start = diet_round.datetime_start
+    day_now = datetime.now(timezone.utc) 
+    day_diff = ((day_now + timedelta(hours=7)) - (day_start + timedelta(hours=7))).days
+    
     diet_data = Diet.objects.get(id=diet_round.diet_id)
 
     bmr_days = user_bmr * (day_diff + 1 if day_diff == 0 else day_diff if day_diff <= 30 else 30)
+
+    data_slides = [
+        {
+            "title" : "YESTERDAY",
+            "id_element" : "ChartYesterday",
+            "bmr" : user_bmr,
+            "food" : totals_food["yesterday"],
+            "exercise" : totals_exercise["yesterday"],
+            "remain" : user_bmr - ( totals_food["yesterday"] + totals_exercise["yesterday"] if diet_data.id != 7 else totals_food["yesterday"] - totals_exercise["yesterday"] ),
+        },
+        {
+            "title" : "TODAY",
+            "id_element" : "ChartToDay",
+            "bmr" : user_bmr,
+            "food" : totals_food["today"],
+            "exercise" : totals_exercise["today"],
+            "remain" : user_bmr - ( totals_food["today"] + totals_exercise["today"] if diet_data.id != 7 else totals_food["today"] - totals_exercise["today"] ),
+        }, 
+        {
+            "title" : "ALL 30 DAY",
+            "id_element" : "ChartDays",
+            "bmr" : bmr_days,
+            "food" : totals_food["Days"],
+            "exercise" : totals_exercise["Days"],
+            "remain" : bmr_days - ( totals_food["Days"] + totals_exercise["Days"] if diet_data.id != 7 else totals_food["Days"] - totals_exercise["Days"] )
+        }
+    ] if not day_selected_template else [
+        {
+            "title" : day_selected_template,
+            "id_element" : "TODAY",
+            "bmr" : user_bmr,
+            "food" : totals_food["date_select"],
+            "exercise" : totals_exercise["date_select"],
+            "remain" : user_bmr - ( totals_food["date_select"] + totals_exercise["date_select"] if diet_data.id != 7 else totals_food["date_select"] - totals_exercise["date_select"] ),
+        }
+    ]
     return render(request,"goal/aftergoal.html" , {
-        "remain" : {
-            "today" : user_bmr - ( totals_food["today"] + totals_exercise["today"] if diet_data.id != 7 else totals_food["today"] - totals_exercise["today"] ),
-            "yesterday" : user_bmr - ( totals_food["yesterday"] + totals_exercise["yesterday"] if diet_data.id != 7 else totals_food["yesterday"] - totals_exercise["yesterday"] ),
-            "Days" : bmr_days - ( totals_food["Days"] + totals_exercise["Days"] if diet_data.id != 7 else totals_food["Days"] - totals_exercise["Days"] )
-        },
-        "bmr" : {
-            "day" : user_bmr,
-            "Days" : bmr_days
-        },
-        "food" : {
-            "foods" : food_calorie,
-            "totals" : totals_food
-        },
-        "exercise" : {
-            "exercises" : exercise_calorie,
-            "totals" : totals_exercise
-        },
+        "data_slides" : data_slides,
+        "day_start" : day_start,
+        "day_now" : day_now,
         "day_goal" : day_diff,
         "diet_type" : diet_data.name,
-        "diet_body" : f"{diet_round.body}.jpg"
+        "diet_body" : f"{diet_round.body}.jpg",
+        "gender" : "men" if user_data.gender == "Male" else "women"
     })
 
 def addExercise(request) :
@@ -238,8 +311,8 @@ def deleteGoal(request) :
 
         if day_diff < 30 :
             diet_round.delete()
-            FoodCalorie.objects.filter(diet_round_id=diet_round_id).delete()
-            ExerciseCalorie.objects.filter(diet_round_id=diet_round_id).delete()
+            # FoodCalorie.objects.filter(diet_round_id=diet_round_id).delete()
+            # ExerciseCalorie.objects.filter(diet_round_id=diet_round_id).delete()
             
             profile.diet = None
             profile.save()

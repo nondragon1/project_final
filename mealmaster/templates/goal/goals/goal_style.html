@@ -1,0 +1,73 @@
+{% load static %}
+<style>
+
+    body {
+        background-image: url("{% static '/images/food_menu.jpg' %}");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .goal-content {
+        overflow: auto;
+        height: calc(100% - 130px);
+        padding-bottom: 30px;
+    }
+
+    .goal-content .header {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .goal-content .header2 {
+        background-color: rgb(54, 140, 154);
+        color: white;
+        border-radius: 20px;
+        margin: 0 auto;
+        width: 95%;
+        max-width: 600px;
+        padding: 8px 0px;
+    }
+    
+    .goal-content .header2 h2 {
+        margin-bottom: 0;
+    }
+
+    .goal-content .photo {
+        text-align: center;
+    }
+
+    .goal-content .photo img {
+        width: 90vw;
+        aspect-ratio: 1/1;
+        margin-top: 30px;
+        max-width: 300px;
+    }
+
+    .goal-content h6 {
+        background-color: rgb(54, 140, 154);
+        color: white;
+        border-radius: 30px;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .goal-content .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        /* width: 100%; */
+        margin: 0;
+        max-width: 100%;
+        padding-top: 10px;
+    }
+
+    .goal-content .container p {
+        background-color: white;
+        padding: 2px 8px;
+        border-radius: 8px;
+    }
+
+    .goal-content .row {
+        text-align: center;
+    }
+</style>

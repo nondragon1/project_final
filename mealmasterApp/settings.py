@@ -31,12 +31,14 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
+    '5f6a-1-47-85-133.ngrok-free.app',
     'mealmaster.meecode.website'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost',
     'http://127.0.0.1',
+    'https://5f6a-1-47-85-133.ngrok-free.app',
     'http://mealmaster.meecode.website',
     'https://mealmaster.meecode.website'
 ]
@@ -103,7 +105,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'webapp_project',
         # 'HOST': 'mysql_workout',
-        'HOST': '54.169.211.200',
+        'HOST': '54.254.169.217',
         'USER': 'root',
         'PASSWORD': 'workout',
     }
@@ -164,5 +166,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'media/')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'fquarius13@gmail.com'
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_PASS")
 
 # django_heroku.settings(locals())

@@ -3,555 +3,537 @@
 {% load static %}
 
 {%block content%}
-<script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.bundle.js"></script>
-<style>
-    .header {
-        text-align: center;
-        margin-top: 20px;
-    }
+<div class="content-body">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.bundle.js"></script>
+    <style>
 
-    .container {
-        border: 5px solid black;
-        border-radius: 20px;
-        width: 70%;
-    }
+        body {
+            background-image: url("{% static '/images/food_menu.jpg' %}");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
 
-    .bar {
-        margin-top: 30px;
-    }
+        .title-type {
+            font-size: 25px;
+        }
 
-    .type-diet {
-        border: 5px solid black;
-        border-radius: 20px;
-        background-color: #605dff;
-        padding: 10px;
-        width: 50%;
-    }
+        .title {
+            font-size: 18px;
+        }
 
-    /* ------------------------------------ */
+        .header {
+            text-align: center;
+            margin-top: 20px;
+        }
 
-    .next {
-        float: right;
+        .frame-datepicker {
+            position: relative;
+        }
 
-    }
+        .frame-datepicker input {
+                width: 0px;
+                height: 0px;
+                opacity: 0;
+                position: absolute;
+            }
 
-    .prev {
-        float: left;
+        .frame-content {
+            border-radius: 20px;
+            width: 95%;
+            max-width: 800px;
+            overflow: hidden;
+            background-color: white;
+            box-shadow: 0px 0px 10px skyblue;
+        }
 
-    }
+        .content-exercise {
+            display: flex;
+            width: calc(100% - 20px);
+            max-width: 300px;
+        }
 
-    /* The dots/bullets/indicators */
-    .dot {
-        cursor: pointer;
-        height: 15px;
-        width: 15px;
-        margin: 0 2px;
-        background-color: #bbb;
-        border-radius: 50%;
-        display: inline-block;
-        transition: background-color 0.6s ease;
-    }
+        .frame-icon {
+            width: 50px;
+        }
 
-    .active,
-    .dot:hover {
-        background-color: #717171;
-    }
+        .icon-exercise {
+            font-size: 40px;
+        }
 
-    .enter {
-        text-align: center;
-        margin-top: 40px;
-    }
-</style>
-{% if day_goal < 30 %}
-<div class="slideshow-container">
-    <div class="mySlides">
-        <div class="header">
-            <h1>TODAY</h1>
+        .content-input-exercise {
+            margin-left: 10px;
+            width: calc(100% - 40px);
+        }
+
+        .type-diet {
+            border: 5px solid black;
+            border-radius: 20px;
+            background-color: #605dff;
+            padding: 10px;
+            width: 100%;
+        }
+
+        /* ------------------------------------ */
+
+        .next {
+            margin-right: calc(100% - 95%);
+            margin-top: 10px;
+            float: right;
+        }
+
+        .prev {
+            margin-left: calc(100% - 95%);
+            margin-top: 10px;
+            float: left;
+        }
+
+        /* The dots/bullets/indicators */
+        .dot {
+            cursor: pointer;
+            height: 15px;
+            width: 15px;
+            margin: 0 2px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.6s ease;
+        }
+
+        .active,
+        .dot:hover {
+            background-color: #717171;
+        }
+
+        .enter {
+            text-align: center;
+        }
+
+        .result-fate {
+            background-color: rgb(54, 140, 154);
+            border-radius: 8px;
+            color: white;
+            padding: 5px 0px;
+            margin-bottom: 10px;
+        }
+
+        /* @media only screen and (max-width: 600px) {
+
+        } */
+
+        @media only screen and (max-width: 400px) {
+            .title-type {
+                font-size: 20px;
+            }
+
+            .title {
+                font-size: 16px;
+            }
+        }
+
+        @media only screen and (max-width: 300px) {
+            .title-type {
+                font-size: 18px;
+            }
+
+            .title {
+                font-size: 14px;
+            }
+        }
+    </style>
+    {% if day_goal < 30 %} 
+        <div class="slideshow-container">
+            {% for data in data_slides %}
+                <div class="mySlides">
+                    <div class="d-flex justify-content-start align-items-center flex-column">
+                        <div class="frame-content">
+                            <div class="alert alert-primary d-flex justify-content-between align-items-center">
+                                <span class="title-type">{{diet_type}}</span>
+                                <div class="d-flex align-items-center">
+                                    <label class="btn btn-dark me-2 frame-datepicker">
+                                        <i id="datepicker" class="bi bi-calendar-week"></i>
+                                    </label>
+                                    <span class="badge bg-info title">{{data.title}}</span>
+                                </div>
+                            </div>
+                            <div class="p-3 pt-0">
+                                <div class="row">
+                                    <div class="col-12 col-md-6 flex-column p-2">
+                                        <h7>Remaining Calories</h7>
+                                        <canvas id={{data.id_element}} style="width:100%;max-width:600px" class="mt-4"></canvas>
+                                    </div>
+                                    <div class="col-12 col-md-6 flex-column p-2">
+                                        <div class="row" style="margin-top: 10px;">
+                                            <div class="col-12 d-flex align-items-center">
+                                                <img src="{% static '/images/goal/goal-icon.png' %}" alt="model-icon"
+                                                    style="width: 50px ; height: 50px;">
+                                                <div style="margin-left: 20px; width: 100%;">
+                                                    <h7>Base Goal</h7>
+                                                    <input value="{{data.bmr}} Cal" readonly class="form-control" />
+                                                </div>
+                                            </div>
+                                            <div class="col-12 d-flex align-items-center" style="margin-top: 50px;">
+                                                <img src="{% static '/images/goal/food-icon.png' %}" alt="model-icon"
+                                                    style="width: 50px ; height: 50px;">
+                                                <div style="margin-left: 20px; width: 100%;">
+                                                    <h7>Food</h7>
+                                                    <input value="{{data.food}} Cal" readonly class="form-control" />
+                                                </div>
+                                            </div>
+                                            <div class="col-12 d-flex align-items-center" style="margin-top: 50px;">
+                                                <img src="{% static '/images/goal/exercise-icon.png' %}" alt="model-icon"
+                                                    style="width: 50px ; height: 50px;">
+                                                <div style="margin-left: 20px; width: 100%;">
+                                                    <h7>Exercise</h7>
+                                                    <input value="{{data.exercise}} Cal" readonly class="form-control" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% if data_slides|length > 1 %}
+                    <a class="prev" onclick="plusSlides(-1)"><img src="{% static '/images/goal/back-logo.png' %}"
+                            alt="model-icon" style="width: 50px ; height: 50px;"></a>
+                    <a class="next" onclick="plusSlides(1)"><img src="{% static '/images/goal/next-logo.png' %}"
+                            alt="model-icon" style="width: 50px ; height: 50px;"></a>
+                    {% endif %}
+                </div>
+            {% endfor %}
         </div>
-        <div class="bar">
-            <div class="container">
-                <br>
-                <h7>Calories</h7>
-                <br>
-                <br>
-                <div class="row">
-                    <div class="col-6 flex-column">
-                        <h7>Remain = {{remain.today}}</h7>
+        <br>
+        {% if data_slides|length > 1 %}
+        <div style="text-align:center">
+            <span class="dot" onclick="currentSlide(1)"></span>
+            <span class="dot" onclick="currentSlide(2)"></span>
+            <span class="dot" onclick="currentSlide(3)"></span>
+        </div>
+        {% endif %}
+        <div class="tab mt-4">
+            <div class="d-flex justify-content-start align-items-center flex-column">
+                <form class="frame-content" method="POST" action="/goal/exercise/add">
+                    {% csrf_token %}
+                    <div class="alert alert-primary d-flex justify-content-between align-items-center">
+                        <span class="title-type">EXERCISE</span>
                     </div>
-                    <div class="col-6 flex-column">
-                        <div class="type-diet">
-                            <h7>TYPE : {{diet_type}}</h7>
-                        </div>
-                    </div>
-                </div>
-                <br>
-                <br>
-                <div class="row">
-                    <div class="col-6 flex-column">
-                        <h7>Remaining Calories : </h7>
-                        <br>
-                        <br>
-                        <canvas id="ChartToDay" style="width:100%;max-width:600px"></canvas>
-                    </div>
-                    <div class="col-6 flex-column">
-                        <div class="row" style="margin-top: 100px;">
-                            <div class="col-12 flex-column">
-                                <img src="{% static '/images/goal/goal-icon.png' %}" alt="model-icon"
-                                    style="width: 50px ; height: 50px;">
-                                <h7 style="margin-left: 20px;">Base Goal : {{ bmr.day }} Cal</h7>
+                    <div class="d-flex flex-column justify-content-center align-items-center pe-3 ps-3 pb-3">
+                        <div class="content-exercise m-3">
+                            <div class="frame-icon d-flex justify-content-center align-items-center">
+                                <i class="bi bi-fire icon-exercise"></i>
                             </div>
-                            <div class="col-12 flex-column" style="margin-top: 50px;">
-                                <img src="{% static '/images/goal/food-icon.png' %}" alt="model-icon"
-                                    style="width: 50px ; height: 50px;">
-                                <h7 style="margin-left: 20px;">Food : {{food.totals.today}} Cal</h7>
-                            </div>
-                            <div class="col-12 flex-column" style="margin-top: 50px;">
-                                <img src="{% static '/images/goal/exercise-icon.png' %}" alt="model-icon"
-                                    style="width: 50px ; height: 50px;">
-                                <h7 style="margin-left: 20px;">Exercise : {{exercise.totals.today}} Cal</h7>
+                            <div class="content-input-exercise">
+                                <div class="w-100 text-end">
+                                    Exercise
+                                </div>
+                                <input type="text" id="add-exercise" name="add-exercise" placeholder="Add Cal"
+                                    style="width: 100%;" class="form-control">
                             </div>
                         </div>
+                        <div class="content-exercise m-3">
+                            <div class="frame-icon d-flex justify-content-center align-items-center">
+                                <i class="bi bi-clock icon-exercise"></i>
+                            </div>
+                            <div class="content-input-exercise">
+                                <div class="w-100 text-end">
+                                    TIME
+                                </div>
+                                <input type="text" id="add-time" name="add-time" placeholder="Add HR" style="width: 100%;"
+                                    class="form-control">
+                            </div>
+                        </div>
+                        <div class="enter">
+                            <button value="submit" type="submit" class="btn btn-dark" name="submit-exercise">Submit</button>
+                        </div>
                     </div>
-                </div>
-                <br>
-                <br>
+                </form>
             </div>
-            <a class="prev" onclick="plusSlides(-1)"><img src="{% static '/images/goal/back-logo.png' %}" alt="model-icon"
-                    style="width: 50px ; height: 50px;"></a>
-            <a class="next" onclick="plusSlides(1)"><img src="{% static '/images/goal/next-logo.png' %}" alt="model-icon"
-                    style="width: 50px ; height: 50px;"></a>
         </div>
-    </div>
-    <div class="mySlides">
-        <div class="header">
-            <h1>YESTERDAY</h1>
-        </div>
-        <div class="bar">
-            <div class="container">
-                <br>
-                <h7>Calories</h7>
-                <br>
-                <br>
-                <div class="row">
-                    <div class="col-6 flex-column">
-                        <h7>Remain = {{remain.yesterday}}</h7>
-                    </div>
-                    <div class="col-6 flex-column">
-                        <div class="type-diet">
-                            <h7>TYPE : {{diet_type}}</h7>
-                        </div>
-                    </div>
-                </div>
-                <br>
-                <br>
-                <div class="row">
-                    <div class="col-6 flex-column">
-                        <h7>Remaining Calories : </h7>
-                        <br>
-                        <br>
-                        <canvas id="ChartYesterday" style="width:100%;max-width:600px"></canvas>
-                    </div>
-                    <div class="col-6 flex-column">
-                        <div class="row" style="margin-top: 100px;">
-                            <div class="col-12 flex-column">
-                                <img src="{% static '/images/goal/goal-icon.png' %}" alt="model-icon"
-                                    style="width: 50px ; height: 50px;">
-                                <h7 style="margin-left: 20px;">Base Goal : {{ bmr.day }} Cal</h7>
-                            </div>
-                            <div class="col-12 flex-column" style="margin-top: 50px;">
-                                <img src="{% static '/images/goal/food-icon.png' %}" alt="model-icon"
-                                    style="width: 50px ; height: 50px;">
-                                <h7 style="margin-left: 20px;">Food : {{food.totals.yesterday}} Cal</h7>
-                            </div>
-                            <div class="col-12 flex-column" style="margin-top: 50px;">
-                                <img src="{% static '/images/goal/exercise-icon.png' %}" alt="model-icon"
-                                    style="width: 50px ; height: 50px;">
-                                <h7 style="margin-left: 20px;">Exercise : {{exercise.totals.yesterday}} Cal</h7>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <br>
-                <br>
-            </div>
-            <a class="prev" onclick="plusSlides(-1)"><img src="{% static '/images/goal/back-logo.png' %}" alt="model-icon"
-                    style="width: 50px ; height: 50px;"></a>
-            <a class="next" onclick="plusSlides(1)"><img src="{% static '/images/goal/next-logo.png' %}" alt="model-icon"
-                    style="width: 50px ; height: 50px;"></a>
-        </div>
-    </div>
-    <div class="mySlides">
-        <div class="header">
-            <h1>ALL 30 DAY</h1>
-        </div>
-        <div class="bar">
-            <div class="container">
-                <br>
-                <h7>Calories</h7>
-                <br>
-                <br>
-                <div class="row">
-                    <div class="col-6 flex-column">
-                        <h7>Remain = {{remain.Days}}</h7>
-                    </div>
-                    <div class="col-6 flex-column">
-                        <div class="type-diet">
-                            <h7>TYPE : {{diet_type}}</h7>
-                        </div>
-                    </div>
-                </div>
-                <br>
-                <br>
-                <div class="row">
-                    <div class="col-6 flex-column">
-                        <h7>Remaining Calories : </h7>
-                        <br>
-                        <br>
-                        <canvas id="ChartDays" style="width:100%;max-width:600px"></canvas>
-                    </div>
-                    <div class="col-6 flex-column">
-                        <div class="row" style="margin-top: 100px;">
-                            <div class="col-12 flex-column">
-                                <img src="{% static '/images/goal/goal-icon.png' %}" alt="model-icon"
-                                    style="width: 50px ; height: 50px;">
-                                <h7 style="margin-left: 20px;">Base Goal : {{ bmr.Days }} Cal</h7>
-                            </div>
-                            <div class="col-12 flex-column" style="margin-top: 50px;">
-                                <img src="{% static '/images/goal/food-icon.png' %}" alt="model-icon"
-                                    style="width: 50px ; height: 50px;">
-                                <h7 style="margin-left: 20px;">Food : {{food.totals.Days}} Cal</h7>
-                            </div>
-                            <div class="col-12 flex-column" style="margin-top: 50px;">
-                                <img src="{% static '/images/goal/exercise-icon.png' %}" alt="model-icon"
-                                    style="width: 50px ; height: 50px;">
-                                <h7 style="margin-left: 20px;">Exercise : {{exercise.totals.Days}} Cal</h7>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <br>
-                <br>
-            </div>
-            <a class="prev" onclick="plusSlides(-1)"><img src="{% static '/images/goal/back-logo.png' %}" alt="model-icon"
-                    style="width: 50px ; height: 50px;"></a>
-            <a class="next" onclick="plusSlides(1)"><img src="{% static '/images/goal/next-logo.png' %}" alt="model-icon"
-                    style="width: 50px ; height: 50px;"></a>
-        </div>
-    </div>
-
-</div>
-<br>
-<div style="text-align:center">
-    <span class="dot" onclick="currentSlide(1)"></span>
-    <span class="dot" onclick="currentSlide(2)"></span>
-    <span class="dot" onclick="currentSlide(3)"></span>
-</div>
-
-<div class="tab">
-    <div class="bar">
-        <form class="container" method="POST" action="/goal/exercise/add">
+        <form method="POST" action="/goal/delete/" class="enter mt-4 mb-5">
             {% csrf_token %}
-            <div class="header">
-                <h1>EXERCISE</h1>
-            </div>
-            <div class="row" style="text-align: center;">
-                <div class="col-4 flex-column">
-                    <img src="{% static '/images/goal/burn-logo.png' %}" alt="model-icon"
-                        style="width: 50px ; height: 50px;">
-                </div>
-                <div class="col-3 flex-column" style="margin-top: 15px;">
-                    <h7>Exercise : </h7>
-                </div>
-                <div class="col-4 flex-column">
-                    <input type="text" id="add-exercise" name="add-exercise" placeholder="Add..."
-                        style="margin-top: 10px; width: 100%;" class="form-control">
-                </div>
-                <div class="col-1" style="margin-top: 15px;">
-                    <h7>Cal</h7>
-                </div>
-            </div>
-            <br>
-            <div class="row" style="text-align: center;">
-                <div class="col-4 flex-column">
-                    <img src="{% static '/images/goal/time-logo.png' %}" alt="model-icon"
-                        style="width: 40px ; height: 40px;">
-                </div>
-                <div class="col-3 flex-column" style="margin-top: 15px;">
-                    <h7>TIME : </h7>
-                </div>
-                <div class="col-4 flex-column">
-                    <input type="text" id="add-time" name="add-time" placeholder="Add..." style="margin-top: 10px; width: 100%;" class="form-control">
-                </div>
-                <div class="col-1" style="margin-top: 15px;">
-                    <h7>HR</h7>
-                </div>
-            </div>
-            <div class="enter">
-                <button value="submit" type="submit" class="btn btn-dark" name="submit-exercise">Submit</button>
-            </div>
-            <br>
-            <br>
+            <button type="submit" class="btn btn-dark">
+                <h4 style="margin: 0;">Cancel</h4>
+            </button>
         </form>
-    </div>
-</div>
-<br>
-<br>
-<br>
-<br>
-<form method="POST" action="/goal/delete/" class="enter">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-dark" style="width: 400px;height: 50px;">
-        <h4>Cancel</h4>
-    </button>
-</form>
-{% else %}
-<div class="slideshow-container">
-    <div class="mySlides">
-        <div class="header">
-            <h1>Summary of results</h1>
-        </div>
-        <div class="bar">
-            <div class="container">
-                <br>
-                <h7>Calories</h7>
-                <br>
-                <br>
-                <div class="row">
-                    <div class="col-6 flex-column">
-                        <h7>Remain = {{remain.Days}}</h7>
-                    </div>
-                    <div class="col-6 flex-column">
-                        <div class="type-diet">
-                            <h7>TYPE : {{diet_type}}</h7>
+    {% else %}
+        <div class="slideshow-container">
+            <div class="mySlides">
+                <div class="d-flex justify-content-start align-items-center flex-column">
+                    <div class="frame-content">
+                        <div class="alert alert-primary d-flex justify-content-between align-items-center">
+                            <span class="title-type">{{diet_type}}</span>
+                            <div class="d-flex align-items-center">
+                                <span class="badge bg-info title">Summary of results</span>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <br>
-                <br>
-                <div class="row">
-                    <div class="col-6 flex-column">
-                        <h7>Remaining Calories : </h7>
-                        <br>
-                        <br>
-                        <canvas id="ChartDays" style="width:100%;max-width:600px"></canvas>
-                    </div>
-                    <div class="col-6 flex-column">
-                        <div class="row" style="margin-top: 100px;">
-                            <div class="col-12 flex-column">
-                                <img src="{% static '/images/goal/goal-icon.png' %}" alt="model-icon"
-                                    style="width: 50px ; height: 50px;">
-                                <h7 style="margin-left: 20px;">Base Goal : {{ bmr.Days }} Cal</h7>
-                            </div>
-                            <div class="col-12 flex-column" style="margin-top: 50px;">
-                                <img src="{% static '/images/goal/food-icon.png' %}" alt="model-icon"
-                                    style="width: 50px ; height: 50px;">
-                                <h7 style="margin-left: 20px;">Food : {{food.totals.Days}} Cal</h7>
-                            </div>
-                            <div class="col-12 flex-column" style="margin-top: 50px;">
-                                <img src="{% static '/images/goal/exercise-icon.png' %}" alt="model-icon"
-                                    style="width: 50px ; height: 50px;">
-                                <h7 style="margin-left: 20px;">Exercise : {{exercise.totals.Days}} Cal</h7>
+                        <div class="p-3 pt-0">
+                            <div class="row">
+                                <div class="col-12 col-md-6 flex-column p-2">
+                                    <h7>Remaining Calories</h7>
+                                    <canvas id={{data_slides.2.id_element}} style="width:100%;max-width:600px" class="mt-4"></canvas>
+                                </div>
+                                <div class="col-12 col-md-6 flex-column p-2">
+                                    <div class="row" style="margin-top: 10px;">
+                                        <div class="col-12 d-flex align-items-center">
+                                            <img src="{% static '/images/goal/goal-icon.png' %}" alt="model-icon"
+                                                style="width: 50px ; height: 50px;">
+                                            <div style="margin-left: 20px; width: 100%;">
+                                                <h7>Base Goal</h7>
+                                                <input value="{{ data_slides.2.bmr }} Cal" readonly class="form-control" />
+                                            </div>
+                                        </div>
+                                        <div class="col-12 d-flex align-items-center" style="margin-top: 50px;">
+                                            <img src="{% static '/images/goal/food-icon.png' %}" alt="model-icon"
+                                                style="width: 50px ; height: 50px;">
+                                            <div style="margin-left: 20px; width: 100%;">
+                                                <h7>Food</h7>
+                                                <input value="{{data_slides.2.food}} Cal" readonly class="form-control" />
+                                            </div>
+                                        </div>
+                                        <div class="col-12 d-flex align-items-center" style="margin-top: 50px;">
+                                            <img src="{% static '/images/goal/exercise-icon.png' %}" alt="model-icon"
+                                                style="width: 50px ; height: 50px;">
+                                            <div style="margin-left: 20px; width: 100%;">
+                                                <h7>Exercise</h7>
+                                                <input value="{{data_slides.2.exercise}} Cal" readonly class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <br>
-                <br>
             </div>
         </div>
-    </div>
-</div>
-<form class="d-flex justify-content-center flex-column mt-3" method="POST" enctype="multipart/form-data" action="/goal/change/">
-    {% csrf_token %}
-    <div class="d-flex justify-content-center flex-column">
-        <h3 class="w-100 d-flex justify-content-center">Result fate</h3>
-        <div class="row">
-            <div class="col-sm-12 col-md-6">
-                <div class="d-flex justify-content-center flex-column">
-                    <label class="d-flex justify-content-center align-items-center">
-                        <span class="btn btn-info">Click to Add Image</span>
-                        <input hidden name="image-progress" id="imageInput" type="file"/>
-                    </label>
-                    <div class="preview-progress d-flex justify-content-center align-items-center mt-1">
-                        <img id="imagePreview" src="#" alt="Image Preview" style="display:none; max-width: 500px; width: 70%;">
+        <div class="tab mt-4">
+            <div class="d-flex justify-content-start align-items-center flex-column">
+                <form class="d-flex justify-content-center flex-column mt-3" method="POST" enctype="multipart/form-data" 
+                style="
+                    border-radius: 20px;
+                    width: 95%;
+                    max-width: 800px;
+                    padding: 8px;
+                    background: white;
+                    box-shadow: 0px 0px 10px skyblue;
+                "
+                    action="/goal/change/">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-center flex-column" style="overflow: hidden;">
+                        <h3 class="w-100 d-flex justify-content-center result-fate">Result fate</h3>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="d-flex justify-content-center flex-column">
+                                    <label class="d-flex justify-content-center align-items-center">
+                                        <span class="btn btn-info">
+                                            <i class="bi bi-camera" style="color: white;"></i>
+                                        </span>
+                                        <input hidden name="image-progress" id="imageInput" type="file" />
+                                    </label>
+                                    <div class="preview-progress d-flex justify-content-center align-items-center mt-1">
+                                        <img id="imagePreview" src="#" alt="Image Preview"
+                                            style="display:none; max-width: 500px; width: 70%; border-radius: 8px;">
+                                    </div>
+                                </div>
+                                <script>
+                                    document.getElementById('imageInput').addEventListener('change', function (event) {
+                                        const file = event.target.files[0];
+                                        if (file) {
+                                            const reader = new FileReader();
+
+                                            reader.onload = function (e) {
+                                                const previewImage = document.getElementById('imagePreview');
+                                                previewImage.src = e.target.result;
+                                                previewImage.style.display = 'block'
+                                            }
+
+                                            reader.readAsDataURL(file)
+                                            document.getElementById("button-submit-image").style.display = "block"
+                                        }
+                                    });
+                                </script>
+                            </div>
+                            <div class="col-6 d-flex justify-content-center">
+                                <img src="{% static '/images/goal/' %}{{ gender }}/{{ diet_body }}" alt="model-fat"
+                                    style="max-width: 300px ; width: 70%; border-radius: 8px;">
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <script>
-                    document.getElementById('imageInput').addEventListener('change', function(event) {
-                        const file = event.target.files[0];
-                        if (file) {
-                            const reader = new FileReader();
-            
-                            reader.onload = function(e) {
-                                const previewImage = document.getElementById('imagePreview');
-                                previewImage.src = e.target.result;
-                                previewImage.style.display = 'block'
-                            }
-            
-                            reader.readAsDataURL(file)
-                            document.getElementById("button-submit-image").style.display = "block"
-                        }
+                    <div class="d-flex justify-content-center mt-3">
+                        <button type="submit" class="btn">
+                            <h4>Submit</h4>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+    <script>
+        let slideIndex = 2;
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+        }
+
+        function showSlides(n) {
+            let i;
+            let slides = document.getElementsByClassName("mySlides");
+            let dots = document.getElementsByClassName("dot");
+            if (slides.length && dots.length) {
+                if (n > slides.length) { slideIndex = 1 }
+                if (n < 1) { slideIndex = slides.length }
+                for (i = 0; i < slides.length; i++) {
+                    slides[i].style.display = "none";
+                }
+                for (i = 0; i < dots.length; i++) {
+                    dots[i].className = dots[i].className.replace(" active", "");
+                }
+                slides[slideIndex - 1].style.display = "block";
+                dots[slideIndex - 1].className += " active";
+            }
+        }
+        $(document).ready(() => {
+            showSlides(slideIndex);
+
+            const labels = [
+                "Remaining energy",
+                "Energy consumed",
+                "Exercise"
+            ]
+            const backgroundColor = [
+                "#b91d47",
+                "#00aba9",
+                "#FFCE56"
+            ]
+            const hoverBackground = [
+                "#b91d47",
+                "#00aba9",
+                "#FFCE56"
+            ]
+
+            Chart.pluginService.register({
+                beforeDraw: function (chart) {
+                    var width = chart.chart.width,
+                        height = chart.chart.height,
+                        ctx = chart.chart.ctx;
+
+                    ctx.restore();
+                    var fontSize = (height / 114).toFixed(2);
+                    ctx.font = fontSize + "em sans-serif";
+                    ctx.textBaseline = "middle";
+
+                    var text = chart.config.options.customText || "",
+                        textX = Math.round((width - ctx.measureText(text).width) / 2),
+                        textY = height / 2;
+
+                    ctx.fillText(text, textX, textY);
+                    ctx.save();
+                }
+            });
+
+            for (const data of JSON.parse(String("{{data_slides|safe}}").replace(/'/g, '\"'))) {
+                const element = document.getElementById(data["id_element"])
+                const content = {
+                    labels: labels,
+                    datasets: [
+                        {
+                            data: [data["bmr"], data["food"], data["exercise"]],
+                            backgroundColor: backgroundColor,
+                            hoverBackgroundColor: hoverBackground,
+                        }]
+                }
+
+                element && new Chart(element, {
+                    type: 'doughnut',
+                    data: content,
+                    options: {
+                        responsive: true,
+                        legend: {
+                            display: false
+                        },
+                        customText: data.remain
+                    }
+                });
+            }
+
+            function convertToBuddhistYear(instance) {
+                const currentYearElement = instance.currentYearElement;
+                let currentYear = parseInt(currentYearElement.value);
+                currentYearElement.value = currentYear + 543;
+            }
+
+            function goToToday(instance) {
+                instance.setDate(new Date());
+                convertToBuddhistYear(instance);
+            }
+
+            const day_start = new Date("{{day_start|safe}}")
+            const day_now = new Date("{{day_now|safe}}")
+            let previousDate = null;
+
+            flatpickr("#datepicker", {
+                disableMobile: true,
+                dateFormat: "Y-m-d",
+                minDate: `${day_start.getFullYear()}-${day_start.getMonth() + 1}-${day_start.getDate()}`, 
+                maxDate: `${day_now.getFullYear()}-${day_now.getMonth() + 1}-${day_now.getDate()}`,
+                locale: "th",
+                onReady: function (selectedDates, dateStr, instance) {
+                    convertToBuddhistYear(instance);
+
+                    const currentButton = document.createElement("button");
+                    currentButton.innerText = "กลับไปยังวันปัจจุบัน";
+                    currentButton.classList.add("flatpickr-current-button");
+                    currentButton.classList.add("btn");
+                    currentButton.classList.add("btn-dark");
+                    currentButton.classList.add("w-100");
+                    currentButton.addEventListener("click", function () {
+                        goToToday(instance);
                     });
-                </script>
-            </div>
-            <div class="col-sm-12 col-md-6 d-flex justify-content-center">
-                <img 
-                    src="{% static '/images/goal/'|add:diet_body %}" 
-                    alt="model-fat" 
-                    style="width: 300px ; height: 300px;"
-                >
-            </div>
-        </div>
-    </div>
-    <div class="d-flex justify-content-center mt-3">
-        <button type="submit" class="btn btn-dark" style="width: 400px;height: 50px;">
-            <h4>Submit</h4>
-        </button>
-    </div>
-</form>
-{% endif %}
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<script>
-    const labels = [
-        "Remaining energy",
-        "Energy consumed",
-        "Exercise"
-    ]
-    const backgroundColor = [
-        "#b91d47",
-        "#00aba9",
-        "#FFCE56"
-    ]
-    const hoverBackground = [
-        "#b91d47",
-        "#00aba9",
-        "#FFCE56"
-    ]
 
-    const today = {
-        labels: labels,
-        datasets: [
-            {
-                data: [JSON.parse("{{bmr.day|safe}}") , JSON.parse("{{food.totals.today|safe}}"), JSON.parse("{{exercise.totals.today|safe}}")],
-                backgroundColor: backgroundColor,
-                hoverBackgroundColor: hoverBackground,
-            }]
-    };
-    const yesterday = {
-        labels: labels,
-        datasets: [
-            {
-                data: [JSON.parse("{{bmr.day|safe}}") , JSON.parse("{{food.totals.yesterday|safe}}"), JSON.parse("{{exercise.totals.yesterday|safe}}")],
-                backgroundColor: backgroundColor,
-                hoverBackgroundColor: hoverBackground,
-            }]
-    };
-    const sevenDay = {
-        labels: labels,
-        datasets: [
-            {
-                data: [JSON.parse("{{bmr.Days|safe}}") , JSON.parse("{{food.totals.Days|safe}}"), JSON.parse("{{exercise.totals.Days|safe}}")],
-                backgroundColor: backgroundColor,
-                hoverBackgroundColor: hoverBackground,
-            }]
-    };
+                    instance.calendarContainer.appendChild(currentButton);
+                },
+                onChange: function (selectedDates, dateStr, instance) {
+                    convertToBuddhistYear(instance);
+                    previousDate = dateStr;
+                },
+                onClose: function (selectedDates, dateStr, instance) {
+                    if (previousDate !== dateStr) {
+                        const timestamp = Math.floor(selectedDates[0].getTime() / 1000);
+                        window.location.href = `/aftergoal?date=${timestamp}`
+                    }
+                },
+                onMonthChange: function (selectedDates, dateStr, instance) {
+                    convertToBuddhistYear(instance);
+                },
+                onYearChange: function (selectedDates, dateStr, instance) {
+                    convertToBuddhistYear(instance);
+                },
+                onOpen: function (selectedDates, dateStr, instance) {
+                    const prevMonthButton = instance.calendarContainer.querySelector(".flatpickr-prev-month");
+                    const nextMonthButton = instance.calendarContainer.querySelector(".flatpickr-next-month");
 
-    const ToDayDocument = document.getElementById('ChartToDay')
-    const YesterdayDocument = document.getElementById('ChartYesterday')
-    const DaysDocument = document.getElementById('ChartDays')
+                    if (prevMonthButton && nextMonthButton) {
+                        prevMonthButton.addEventListener('click', function () {
+                            setTimeout(function () {
+                                convertToBuddhistYear(instance);
+                            }, 1);
+                        });
 
-    // ------------------------
-    let slideIndex = 1;
-    showSlides(slideIndex);
-
-    function plusSlides(n) {
-        showSlides(slideIndex += n);
-    }
-
-    function currentSlide(n) {
-        showSlides(slideIndex = n);
-    }
-
-    function showSlides(n) {
-        let i;
-        let slides = document.getElementsByClassName("mySlides");
-        let dots = document.getElementsByClassName("dot");
-        if(slides.length && dots.length) {
-            if (n > slides.length) { slideIndex = 1 }
-            if (n < 1) { slideIndex = slides.length }
-            for (i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";
-            }
-            for (i = 0; i < dots.length; i++) {
-                dots[i].className = dots[i].className.replace(" active", "");
-            }
-            slides[slideIndex - 1].style.display = "block";
-            dots[slideIndex - 1].className += " active";
-        }
-    }
-
-    Chart.pluginService.register({
-        beforeDraw: function (chart) {
-            var width = chart.chart.width,
-                height = chart.chart.height,
-                ctx = chart.chart.ctx;
-
-            ctx.restore();
-            var fontSize = (height / 114).toFixed(2);
-            ctx.font = fontSize + "em sans-serif";
-            ctx.textBaseline = "middle";
-
-            var text = chart.config.options.customText || "",
-                textX = Math.round((width - ctx.measureText(text).width) / 2),
-                textY = height / 2;
-
-            ctx.fillText(text, textX, textY);
-            ctx.save();
-        }
-    });
-
-    ToDayDocument && new Chart(ToDayDocument, {
-        type: 'doughnut',
-        data: today,
-        options: {
-            responsive: true,
-            legend: {
-                display: false
-            },
-            customText : JSON.parse("{{remain.today|safe}}")
-        }
-    });
-
-    YesterdayDocument && new Chart(YesterdayDocument, {
-        type: 'doughnut',
-        data: yesterday,
-        options: {
-            responsive: true,
-            legend: {
-                display: false
-            },
-            customText : JSON.parse("{{remain.yesterday|safe}}")
-        }
-    });
-
-    new Chart(DaysDocument, {
-        type: 'doughnut',
-        data: sevenDay,
-        options: {
-            responsive: true,
-            legend: {
-                display: false
-            },
-            customText : JSON.parse("{{remain.Days|safe}}")
-        }
-    });
-</script>
+                        nextMonthButton.addEventListener('click', function () {
+                            setTimeout(function () {
+                                convertToBuddhistYear(instance);
+                            }, 1);
+                        });
+                    }
+                },
+            });
+        })
+    </script>
+</div>
 {% load sweetify %}
 {% sweetify %}
 {% endblock %}

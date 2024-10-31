@@ -2,16 +2,28 @@
 {% load static %}
 {%block content%}
 <style>
+    body {
+        background-image: url("{% static '/images/food_menu.jpg' %}");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
     .header {
         text-align: center;
         margin-top: 20px;
     }
 
     .container {
-        border: 5px solid black;
         border-radius: 20px;
-        width: 70%;
+        width: 95%;
+        max-width: 500px;
         padding: 20px;
+        background-color: white;
+    }
+
+    .container #datepicker {
+        background-color: rgb(54, 140, 154);
+        color: white;
     }
 
     .bar {
@@ -26,123 +38,227 @@
         text-align: center;
     }
 
-    h5 {
-        border: 5px solid black;
-        border-radius: 20px;
+    .total h5 {
+        margin: 0;
+        border-bottom: 4px solid rgb(54, 140, 154);
+        border-radius: 15px;
         padding: 10px;
     }
 
     .tab1 {
         margin-top: 50px;
     }
-</style>
 
-<div class="tab">
-    <div class="header">
-        <h1>TODAY</h1>
-    </div>
-    <div class="bar">
-        <div class="container">
-            <div class="d-flex flex-column">
-                {% for time_stage in list_stage %}
-                    <span style="font-weight: 900;">{{time_stage}}</span>
-                    <div class="pl-1">
-                        {% for food in food_calorie %}
-                            {% if food.time_of_day == time_stage %}
-                            <div>
-                                - {{food.name}} {{food.calorie}} Cal
+    .frame-calorie {
+        position: relative;
+    }
+
+    .frame-calorie .bi-trash3 {
+        position: absolute;
+        right: 20px;
+        top: 10px;
+        color: white;
+        background-color: red;
+        padding: 5px;
+        border-radius: 50%;
+    }
+
+    .frame-calorie .input-calorie {
+        text-align: center;
+        width: 100%;
+        border: 0;
+        background-color: rgb(167, 224, 233);
+        padding: .375rem .75rem;
+        color: black;
+        font-weight: 700;
+    }
+</style>
+<script>
+    function DeleteFood(id) {
+        Swal.fire({
+            title: 'ลบรายการอาหาร',
+            text: 'คุณต้องการลบรายการนี้หรือไม่?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Cancel',
+            allowOutsideClick: false,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const formData = new FormData(document.getElementById("menu-foods"))
+                formData.append("id_food", parseInt(id))
+                fetch('/diary/food', {
+                    method: 'POST',
+                    body: formData,
+                })
+                    .then(async (response) => ({
+                        data: await response.json(),
+                        status: response.status
+                    }))
+                    .then(data => {
+                        const { status } = data
+                        switch (status) {
+                            case 200:
+                                Swal.fire('ลบแล้ว!', 'รายการของคุณถูกลบแล้ว', 'success')
+                                    .then(() => {
+                                        location.reload();
+                                    })
+                                break;
+                            default:
+                                Swal.fire('ลบไม่สำเร็จ!', 'รายการของคุณไม่ถูกลบ', 'error')
+                                    .then(() => {
+                                        location.reload();
+                                    })
+                                break;
+                        }
+                    })
+            } else if (result.isDismissed) {
+                Swal.close()
+            }
+        });
+    }
+</script>
+<div class="content-body">
+    <div class="tab">
+        <div class="header">
+            <h1>TODAY</h1>
+        </div>
+        <div class="bar">
+            <div class="container">
+                {% if food_calorie %}
+                <form class="d-flex flex-column" id="menu-foods">
+                    {% csrf_token %}
+                    {% for food in food_calorie %}
+                    <div class="row mt-1 mb-1 frame-calorie">
+                        <div class="col-12 d-flex">
+                            <input style="border-top-left-radius: 15px; border-top-right-radius: 15px;"
+                                class="input-calorie text-center" readonly value="{{food.name}}" />
+                            <i class="bi bi-trash3" onclick="DeleteFood('{{food.id}}')"></i>
+                        </div>
+                        <div class="col-12 d-flex">
+                            <div class="w-50">
+                                <input style="border-bottom-left-radius: 15px;" class="input-calorie text-center"
+                                    readonly value="{{food.time}}" />
                             </div>
-                            {% endif %}
-                        {% endfor %}
+                            <div class="w-50">
+                                <input style="border-bottom-right-radius: 15px;" class="input-calorie text-center"
+                                    readonly value="{{food.calorie}} Cal" />
+                            </div>
+                        </div>
                     </div>
-                {% endfor %}
-            </div>
-            <div class="total mt-4">
-                <h5>TOTAL : {{total}} Cal</h5>
+                    {% endfor %}
+                </form>
+                {% endif %}
+                <div class="total {% if food_calorie %} mt-4 {% endif %}">
+                    <h5>TOTAL : {{total}} Cal</h5>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="tab1">
-    <div class="header">
-        <h1>Diary</h1>
-    </div>
-    <div class="bar">
-        <div class="container">
-            <div class="row">
-                {% for daydata in days_history.days %}
-                <div class="col-sm-12 col-md-4 flex-column d-flex align-items-center mt-1">
-                    {% if daydata.selected %}
-                    <a type="button" class="btn btn-info w-100" href="/diary?date={{daydata.datetime}}" style="width: 200px;height: 40px;">
-                        <h7>{{daydata.daystr}}</h7>
-                    </a>
+    <div class="tab1">
+        <div class="header">
+            <h1>Diary</h1>
+        </div>
+        <div class="bar">
+            <div class="container">
+                <input type="text" id="datepicker" class="btn w-100 text-center" placeholder="เลือกวันที่"
+                    value="{{days_history.default}}" />
+                {% if days_history.default %}
+                <div class="mt-4">
+                    {% if days_history.foods_calorie %}
+                    <div class="text-center w-100 text-weight-900">Foods</div>
+                    {% for food in days_history.foods_calorie %}
+                    <div class="row mt-1 mb-1">
+                        <div class="col-12">
+                            <input class="form-control text-center" readonly value="{{food.name}}" />
+                        </div>
+                        <div class="col-12 d-flex">
+                            <div class="w-50">
+                                <input class="form-control text-center" readonly value="{{food.time}}" />
+                            </div>
+                            <div class="w-50">
+                                <input class="form-control text-center" readonly value="{{food.calorie}} Cal" />
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
                     {% else %}
-                    <a type="button" class="btn btn-dark w-100" href="/diary?date={{daydata.datetime}}" style="width: 200px;height: 40px;">
-                        <h7>{{daydata.daystr}}</h7>
-                    </a>
+                    <div class="text-center w-100">No found food</div>
                     {% endif %}
                 </div>
-                {% endfor %}
+                {% endif %}
+
+                <script>
+                    function convertToBuddhistYear(instance) {
+                        const currentYearElement = instance.currentYearElement;
+                        let currentYear = parseInt(currentYearElement.value);
+                        currentYearElement.value = currentYear + 543;
+                    }
+
+                    function goToToday(instance) {
+                        instance.setDate(new Date());
+                        convertToBuddhistYear(instance);
+                    }
+
+                    let previousDate = null;
+
+                    flatpickr("#datepicker", {
+                        disableMobile: true,
+                        dateFormat: "Y-m-d",
+                        locale: "th",
+                        onReady: function (selectedDates, dateStr, instance) {
+                            convertToBuddhistYear(instance);
+
+                            const currentButton = document.createElement("button");
+                            currentButton.innerText = "กลับไปยังวันปัจจุบัน";
+                            currentButton.classList.add("flatpickr-current-button");
+                            currentButton.classList.add("btn");
+                            currentButton.classList.add("btn-dark");
+                            currentButton.classList.add("w-100");
+                            currentButton.addEventListener("click", function () {
+                                goToToday(instance);
+                            });
+
+                            instance.calendarContainer.appendChild(currentButton);
+                        },
+                        onChange: function (selectedDates, dateStr, instance) {
+                            convertToBuddhistYear(instance);
+                            previousDate = dateStr;
+                        },
+                        onClose: function (selectedDates, dateStr, instance) {
+                            if (previousDate !== dateStr) {
+                                const timestamp = Math.floor(selectedDates[0].getTime() / 1000);
+                                window.location.href = `/diary?date=${timestamp}`
+                            }
+                        },
+                        onMonthChange: function (selectedDates, dateStr, instance) {
+                            convertToBuddhistYear(instance);
+                        },
+                        onYearChange: function (selectedDates, dateStr, instance) {
+                            convertToBuddhistYear(instance);
+                        },
+                        onOpen: function (selectedDates, dateStr, instance) {
+                            const prevMonthButton = instance.calendarContainer.querySelector(".flatpickr-prev-month");
+                            const nextMonthButton = instance.calendarContainer.querySelector(".flatpickr-next-month");
+
+                            if (prevMonthButton && nextMonthButton) {
+                                prevMonthButton.addEventListener('click', function () {
+                                    setTimeout(function () {
+                                        convertToBuddhistYear(instance);
+                                    }, 1);
+                                });
+
+                                nextMonthButton.addEventListener('click', function () {
+                                    setTimeout(function () {
+                                        convertToBuddhistYear(instance);
+                                    }, 1);
+                                });
+                            }
+                        },
+                    });
+                </script>
             </div>
-            {% if days_history.foods_calorie %}
-            <div class="row mt-3 d-flex flex-column">
-                {% for time_stage in list_stage %}
-                    <span style="font-weight: 900;">{{time_stage}}</span>
-                    <div class="pl-1">
-                        {% for food in days_history.foods_calorie %}
-                            {% if food.time_of_day == time_stage %}
-                            <div>
-                                - {{food.name}} {{food.calorie}} Cal
-                            </div>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                {% endfor %}
-            </div>
-            {% endif %}
         </div>
     </div>
 </div>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-
-<!-- <div class="tab1">
-    <div class="d-flex justify-content-center align-items-center">
-        <div class="header w-100 d-flex flex-column justify-content-center align-items-center">
-            <h1 class="m-0">Progress</h1>
-            <div class="mt-2">
-                <a href="add_progress" class="btn btn-info">Add Image</a>
-            </div>
-        </div>
-    </div>
-    <div class="bar">
-        <div class="container">
-            <div class="row">
-                {% for image in images %}
-                    <div class="col-4 flex-column">
-                        <img width="100%" src="{{ '/media/'|add:image.url_image }}"/>
-                    </div>
-                {% endfor %}
-
-                <!-- <div class="col-4 flex-column">
-                    <a type="button" class="btn btn-dark" href="/" style="width: 200px;height: 40px;">
-                        <h7>17 July 2023</h7>
-                    </a>
-                </div>
-
-                <div class="col-4 flex-column">
-                    <a type="button" class="btn btn-dark" href="/" style="width: 200px;height: 40px;">
-                        <h7>18 July 2023</h7>
-                    </a>
-                </div> -->
-
-            </div>
-        </div>
-    </div>
-</div> -->
 {% endblock %}

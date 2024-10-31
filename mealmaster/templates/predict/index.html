@@ -2,139 +2,251 @@
 {% load static %}
 {%block content%}
 <style>
+    body {
+        background-image: url("{% static '/images/foods.jpg' %}");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
     .content-predict {
         overflow: auto;
-        height: calc(100% - 153px - 3rem);
-        padding-bottom: 130px;
+        max-height: calc(100% - 130px - 140px);
     }
 </style>
-<section class="mt-5 content-predict">
-    <form id="from-predict" class="container d-flex flex-column">
-        <div class="row mb-2">
-            <div class="col-12 d-flex justify-content-center">
-                <a id="bt-change-mode" onclick="changeMode()" class="btn btn-dark">Upload mode</a>
-            </div>
-        </div>
-        {% csrf_token %}
-        <div id="upload-mode" style="display: none;">
-            <label id="bt-add-predict" class="d-flex justify-content-center">
-                <a class="btn btn-dark">Click to upload image</a>
-                <input hidden name="image-progress" id="imageInput" type="file"/>
-            </label>
-            <div
-                class="mt-2"
-                id="imagePreview"
-                style="display: none;"
-            >
-                <div class="preview-progress d-flex justify-content-center align-items-center">
-                    <img src="#" alt="Image Preview" style="max-width: 200px; width: 70%;">
-                </div>
-            </div>
-        </div>
-        <div id="scan-mode">
-            <label id="bt-add-predict" class="d-flex justify-content-between">
-                <a onclick="startScan(this)" class="btn btn-dark">Scan</a>
-                <a onclick="cameraControl(this)" class="btn btn-dark">สลับกล้อง</a>
-            </label>
-            <div class="preview-progress d-flex justify-content-center align-items-center">
-                <video id="video" width="300" height="300"></video>
-                <canvas id="canvas" width="300" height="300" style="display: none;"></canvas>
-            </div>
-        </div>
-    </form>
-    <div class="p-5 d-flex justify-content-center align-item-center">
-        <div id="from-menu-selecteds" class="row justify-content-center"></div>
-    </div>
-</section>
-
 <script>
+
     let stream;
-    var stateButton = true
+    let stateButton = true
+    let image_data;
 
     let IntervalTime = 0
     let stateCameraUser = true
-    const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
-    const context = canvas.getContext('2d');
 
-    function manageImage(data , display) {
-        const previewImage = document.getElementById('imagePreview');
-        previewImage.querySelector("img").src = data;
-        previewImage.style.display = display
+    // datePicker
+    function convertToBuddhistYear(instance) {
+        const currentYearElement = instance.currentYearElement;
+        let currentYear = parseInt(currentYearElement.value);
+        currentYearElement.value = currentYear + 543;
     }
 
-    document.getElementById('imageInput').addEventListener('change', function(event) {
-        const file = event.target.files[0];
+    function goToToday(instance) {
+        instance.setDate(new Date());
+        convertToBuddhistYear(instance);
+    }
+
+    function createDatePicker() {
+        try{
+            flatpickr("#datepicker", {
+                disableMobile: true,
+                dateFormat: "Y-m-d",
+                locale: "th",
+                onReady: function (selectedDates, dateStr, instance) {
+                    convertToBuddhistYear(instance);
+
+                    const currentButton = document.createElement("button");
+                    currentButton.innerText = "กลับไปยังวันปัจจุบัน";
+                    currentButton.classList.add("flatpickr-current-button");
+                    currentButton.classList.add("btn");
+                    currentButton.classList.add("btn-dark");
+                    currentButton.classList.add("w-100");
+                    currentButton.addEventListener("click", function () {
+                        goToToday(instance);
+                    });
+
+                    instance.calendarContainer.appendChild(currentButton);
+                },
+                onChange: function (selectedDates, dateStr, instance) {
+                    convertToBuddhistYear(instance);
+                },
+                onMonthChange: function (selectedDates, dateStr, instance) {
+                    convertToBuddhistYear(instance);
+                },
+                onYearChange: function (selectedDates, dateStr, instance) {
+                    convertToBuddhistYear(instance);
+                },
+                onOpen: function (selectedDates, dateStr, instance) {
+                    const prevMonthButton = instance.calendarContainer.querySelector(".flatpickr-prev-month");
+                    const nextMonthButton = instance.calendarContainer.querySelector(".flatpickr-next-month");
+
+                    if (prevMonthButton && nextMonthButton) {
+                        prevMonthButton.addEventListener('click', function () {
+                            setTimeout(function () {
+                                convertToBuddhistYear(instance);
+                            }, 1);
+                        });
+
+                        nextMonthButton.addEventListener('click', function () {
+                            setTimeout(function () {
+                                convertToBuddhistYear(instance);
+                            }, 1);
+                        });
+                    }
+                },
+            })
+        } catch(err) {
+            alert(err)
+        }
+    }
+
+    function changeImage(target) {
+        const file = target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = function(e) {
-                manageImage(e.target.result , "block")
+            reader.onload = function (e) {
+                manageImage(e.target.result, "flex")
                 submit()
                 ChangeStateButton("off")
             }
             reader.readAsDataURL(file)
 
             const buttonSubmit = document.getElementById("button-submit-image")
-            if(buttonSubmit) buttonSubmit.style.display = "block"
+            if (buttonSubmit) buttonSubmit.style.display = "block"
         }
-    });
+    }
 
-    async function sentPredict(formData) {
-        Swal.fire({
-            title: 'กำลังตรวจสอบอาหาร',
-            text: 'กรุณารอสักครู่...',
-            allowOutsideClick: false,
-            didOpen: () => {
-                Swal.showLoading();
-            }
+    function manageImage(data, display) {
+        const previewImage = document.getElementById('imagePreview');
+        previewImage.querySelector("img").src = data;
+        previewImage.style.display = display
+    }
+
+    async function resizeAndCompressImage(blob, targetSizeKB) {
+        const img = new Image();
+        img.src = URL.createObjectURL(blob);
+        return new Promise((resolve) => {
+            img.onload = async function () {
+                const resize = document.getElementById("resize-image")
+                const canvas_resize = document.createElement("canvas")
+                resize.appendChild(canvas_resize)
+                const ctx = canvas_resize.getContext("2d");
+
+                const aspectRatio = img.width / img.height;
+                let newWidth = img.width;
+                let newHeight = img.height;
+
+                while (true) {
+                    canvas_resize.width = newWidth;
+                    canvas_resize.height = newHeight;
+                    ctx.drawImage(img, 0, 0, newWidth, newHeight);
+
+                    const blobCompressed = await new Promise((resolve) => {
+                        canvas_resize.toBlob((blob) => resolve(blob), "image/jpeg", 1);
+                    });
+
+                    if (blobCompressed.size / 1024 <= targetSizeKB) {
+                        canvas_resize.remove()
+                        const timestamp = new Date().getTime()
+                        resolve(new File( [blobCompressed] , `f_{{ request.user.customer.user_id }}_${timestamp}.jpg`, { type: "image/jpeg" } ));
+                    } else {
+                        newWidth *= 0.9;
+                        newHeight *= 0.9;
+                    }
+                }
+            };
         });
-        const response = await fetch('/predict/menu', {
-            method: 'POST',
-            body: formData,
-        })
-        const { menus } = await response.json()
-        const status = response.status
-        switch(status) {
-            case 200 :
-                const content_from_menus = document.getElementById("from-menu-selecteds")
-                let content = ""
-                menus.forEach(({ id , name , url_image , calorie }) => {
-                    content += `
-                        <form class="card col-10 col-sm-8 col-lg-6 col-xl-6 m-1" onsubmit="return selected(this);">
-                            {% csrf_token %}
-                            <img class="card-img-top" style="aspect-ratio: 600 / 600;width: 100%;" src="/media/thaimenu/${url_image}" alt="${name}">
-                            <div class="card-body">
-                                <h5 class="card-title">${name}</h5>
-                                <input oninput="calculateCal(this , ${calorie})" placeholder="Number of bowls" type="text" required name="number" class="form-control" onkeypress="return isNumberKey(event)"/>
-                                <input hidden name="menu_id" value="${id}"/>
-                                <div class="form-control mt-1" id="calorie-calculate">
-                                    <span>Calorie : </span>
-                                    <span id="calorie-value">0</span>
-                                </div>
-                                <button class="btn btn-dark mt-2 w-100">Select</button>
-                            </div>
-                        </form>
-                    `
-                })
-                content_from_menus.innerHTML = content
-                break;
-            default:
-                break;
+    }
+
+    let load_scan = false;
+    async function sentPredict(formData, type) {
+        if(!load_scan) {
+            load_scan = true
+            Swal.fire({
+                title: 'กำลังตรวจสอบอาหาร',
+                text: 'กรุณารอสักครู่...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            if(type === "upload") {
+                const imageBlob = formData.get("image-progress")
+                const resizedBlob = await resizeAndCompressImage(imageBlob, 1024 * 2)
+                formData.set("image-progress", resizedBlob)
+            }
+
+            const response = await fetch('/predict/menu', {
+                method: 'POST',
+                body: formData,
+            })
+            const { menus } = await response.json()
+            const status = response.status
+            load_scan = false
+            switch (status) {
+                case 200:
+                    try {
+                        let content = ""
+
+                        const now = new Date();
+
+                        const year = now.getFullYear()
+                        const month = String(now.getMonth() + 1).padStart(2, '0')
+                        const day = String(now.getDate()).padStart(2, '0')
+                        const hours = String(now.getHours()).padStart(2, '0')
+                        const minutes = String(now.getMinutes()).padStart(2, '0');
+
+                        const inputTime = (
+                            type === "upload" ?
+                                `
+                                    <input placeholder="เลือกวันที่" type="text" id="datepicker" class="form-control" style="background-color: white;" name="date" value="${year}-${month}-${day}"/>
+                                    <input placeholder="Time of day eat" required class="form-control" name="time" type="time" value="${hours}:${minutes}"/>
+                                ` : ""
+                        )
+
+                        const description = (
+                            type === "upload" ?
+                                ["กรอกวันที่กิน", "กรอกเวลากิน(ระบุเป็นรูปแบบ 24 ชม. เช่น 13:00)", "กรอกจำนวนจาน(สามารถใส่ทศนิยมได้)"] :
+                                ["กรอกจำนวนจาน(สามารถใส่ทศนิยมได้)"]
+                        ).map((text, index) =>
+                            `<div>ช่องที่ ${index + 1} ${text}</div>`
+                        ).join("")
+                        menus.forEach(({ id, name, url_image, calorie }) => {
+                            content += `
+                                <form class="card col-10 col-sm-8 col-lg-6 col-xl-6 m-1" onsubmit="return selected(this);">
+                                    {% csrf_token %}
+                                    <img class="card-img-top" style="aspect-ratio: 600 / 600;width: 100%;" src="/media/thaimenu/${url_image}" alt="${name}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${name}</h5>
+                                        <div>
+                                            ${description}
+                                        </div>
+                                        ${inputTime}
+                                        <input oninput="calculateCal(this , ${calorie})" placeholder="Number of bowls" type="text" required name="number" class="form-control mt-1" onkeypress="return isNumberKey(event)"/>
+                                        <input hidden name="menu_id" value="${id}"/>
+                                        <div class="form-control mt-1" id="calorie-calculate">
+                                            <span>Calorie : </span>
+                                            <span id="calorie-value">0</span>
+                                        </div>
+                                        <button class="btn btn-dark mt-2 w-100">Select</button>
+                                    </div>
+                                </form>
+                            `
+                        })
+                        image_data = formData.get('image-progress')
+                        $("#content-from-menu").removeClass("d-none")
+                        $("#from-menu-selecteds").html(content)
+                        type === "upload" && createDatePicker()
+                    } catch(er) {
+                        alert(er)
+                    }
+                    break;
+                default:
+                    break;
+            }
+            Swal.close();
         }
-        Swal.close();
-        return menus
     }
 
     // upload
     function ChangeStateButton(state) {
         const button = document.querySelector("#bt-add-predict")
         const input = button.querySelector("input")
-        switch(state) {
-            case "on" :
+        switch (state) {
+            case "on":
                 input.disabled = false
                 stateButton = true
                 break;
-            case "off" :
+            case "off":
                 input.disabled = true
                 stateButton = false
                 break;
@@ -144,88 +256,106 @@
     async function submit() {
         const from = document.getElementById("from-predict")
         const formData = new FormData(from)
-        const data = await sentPredict(formData)
+        await sentPredict(formData, "upload")
         ChangeStateButton("on")
     }
-
     // scan
     function captureAndSendImage() {
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        canvas.toBlob( async function(blob) {
+        canvas.toBlob(async function (blob) {
             const from = document.getElementById("from-predict")
             const formData = new FormData(from);
-            formData.append('image-progress', blob, 'canvasImage.png');
+            formData.set('image-progress', blob, `{{request.user.customer.user_id}}_${new Date().getTime()}.jpg`);
             stopScan()
-            const data = await sentPredict(formData)
-        }, 'image/png');
+            sentPredict(formData, "scan")
+        }, 'image/jpeg');
     }
 
-    function cameraControl() {
-        stopScan()
-        stateCameraUser = !stateCameraUser
-        startScan()
-    }
-
-    async function startScan() {
-        // video.play()
+    let stack_camera = 0
+    async function startScan(state) {
+        clearTimeout(IntervalTime)
         if (stream) {
             stream.getTracks().forEach(track => track.stop());
         }
         try {
-            stream = await navigator.mediaDevices.getUserMedia({ video: {
-            facingMode: { exact: !stateCameraUser ? "environment" : "user" } } })
-            video.srcObject = stream;
-            // video.play()
-        } catch(err) {
+            navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: { ideal: (state !== undefined ? state : !stateCameraUser) ? "environment" : "user" },
+                    width: { ideal: 640 },
+                    height: { ideal: 480 }
+                }
+            }).then(st => {
+                if(st.active) {
+                    stack_camera = 0;
+                    stream = st
+                    const video = document.getElementById('video');
+                    video.srcObject = st;
+                    video.play()
+                    IntervalTime = setTimeout(captureAndSendImage, 2000)
+                } else if(stack_camera <= 2) {
+                    stack_camera += 1
+                    stateCameraUser = !stateCameraUser
+                    startScan()
+                }
+            })
+        } catch (err) {
             alert(err)
         }
-        video.play()
-        clearTimeout(IntervalTime)
-        IntervalTime = setTimeout(captureAndSendImage, 2000);
     }
 
     function stopScan() {
-        video.pause()
-        clearTimeout(IntervalTime)
+        const video = document.getElementById('video');
+        video.pause();
+        clearTimeout(IntervalTime);
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+        }
+    }
+
+    let timeoutControl = 0
+    function cameraControl() {
+        stopScan()
+        stateCameraUser = !stateCameraUser
+        clearTimeout(timeoutControl)
+        timeoutControl = setTimeout(() => startScan(stateCameraUser) , 500)
     }
 
     const mode = {
-        state : 0,
-        modes : ["Scan mode" , "Upload mode"]
+        state: 0,
+        modes: ["Scan Mode", "Upload Mode"]
     }
 
-    const uploadMode = document.getElementById("upload-mode")
-    const scanMode = document.getElementById("scan-mode")
-    const buttonChangeMode = document.getElementById("bt-change-mode")
-    const menuContent = document.getElementById("from-menu-selecteds")
-
     function changeMode() {
+        const buttonChangeMode = document.getElementById("bt-change-mode")
         buttonChangeMode.innerHTML = mode.modes[mode.state]
         mode.state = mode.state === 0 ? 1 : 0
 
-        uploadMode.style.display = mode.state ? "block" : "none"
-        scanMode.style.display = mode.state ? "none" : "block"
+        const uploadMode = document.getElementById("upload-mode")
+        const scanMode = document.getElementById("scan-mode")
+        uploadMode.style.display = mode.state ? "flex" : "none"
+        scanMode.style.display = mode.state ? "none" : "flex"
 
-        if(mode.state) {
+        if (mode.state) {
             // upload mode
+            const video = document.getElementById('video');
             video.srcObject = null;
             stateCameraUser = true;
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-                stopScan()
-            }
+            stopScan()
         } else {
             // scan mode
-            manageImage("#" , "none")
+            manageImage("#", "none")
         }
 
-        menuContent.innerHTML = ""
+        $("#content-from-menu").addClass("d-none")
+        $("#from-menu-selecteds").html("")
     }
-</script>
 
-<script>
-    function calculateCal(ev , calorie) {
+    function calculateCal(ev, calorie) {
         const calorieCalculate = document.getElementById("calorie-calculate")
         const calculate = ev.value * calorie
         calorieCalculate.querySelector("#calorie-value").innerHTML = calculate
@@ -242,16 +372,17 @@
         });
 
         const formData = new FormData(target)
+        formData.append("image-predict", image_data)
         fetch('/predict/select', {
             method: 'POST',
             body: formData,
         })
             .then(async (response) => ({
-                data : await response.json(),
-                status : response.status
+                data: await response.json(),
+                status: response.status
             }))
             .then(data => {
-                const { status , data : { title , status : status_swal } } = data
+                const { status, data: { title, status: status_swal } } = data
 
                 Swal.close();
 
@@ -263,6 +394,15 @@
                 })
 
                 const calorieCalculate = document.getElementById("calorie-calculate")
+                const time_element = target.querySelector("input[name='time']")
+
+                if (time_element) {
+                    const now = new Date();
+                    const hours = String(now.getHours()).padStart(2, '0');
+                    const minutes = String(now.getMinutes()).padStart(2, '0');
+                    time_element.value = `${hours}:${minutes}`
+                }
+
                 target.querySelector("input[name='number']").value = ""
                 calorieCalculate.querySelector("#calorie-value").innerHTML = ""
             })
@@ -286,4 +426,73 @@
         return true;
     }
 </script>
+<style>
+    #from-predict .preview-progress {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        max-width: 250px;
+        width: 85%;
+        aspect-ratio: 1/1;
+        border-radius: 8px;
+        overflow: hidden;
+        background-color: white;
+    }
+
+    #from-predict .preview-progress .image-input {
+        z-index: 1;
+    }
+
+    #from-predict .preview-progress .icon-image {
+        color: cadetblue;
+        font-size: clamp(16px, 80vw, 150px);
+    }
+
+    #from-predict .button-choose {
+        background-color: cadetblue;
+        border-radius: 20px;
+        color: white;
+        font-weight: 900;
+    }
+</style>
+<section class="content-predict">
+    <form id="from-predict" class="container d-flex flex-column">
+        <div class="row mb-2">
+            <div class="col-12 d-flex justify-content-center">
+                <a id="bt-change-mode" onclick="changeMode()" class="btn button-choose">Upload Mode</a>
+            </div>
+        </div>
+        {% csrf_token %}
+        <div id="upload-mode" class="justify-content-center align-items-center flex-column" style="display: none;">
+            <div class="preview-progress mb-2">
+                <i class="bi bi-images position-absolute icon-image"></i>
+                <div id="imagePreview" class="justify-content-center align-items-center image-input"
+                    style="display: none;">
+                    <img src="#" alt="Image Preview" style="width: 100%;">
+                </div>
+            </div>
+            <label id="bt-add-predict" class="d-flex justify-content-center">
+                <span class="btn button-choose">Choose Image</span>
+                <input hidden name="image-progress" id="imageInput" type="file" onchange="changeImage(this)" />
+            </label>
+        </div>
+        <div id="scan-mode" class="justify-content-center align-items-center flex-column" style="display: flex;">
+            <div class="preview-progress d-flex justify-content-center align-items-center mb-2">
+                <video id="video" style="z-index: 1;width: 100%;"></video>
+                <canvas id="canvas" width="300" height="300" style="display: none;"></canvas>
+                <div id="resize-image" style="display: none;"></div>
+            </div>
+            <div id="bt-add-predict" class="d-flex justify-content-between">
+                <a onclick="startScan()" class="btn button-choose">Scan</a>
+                <a onclick="cameraControl()"
+                    class="btn button-choose d-flex justify-content-center align-items-center ms-2"><i
+                        class="bi bi-phone-flip"></i></a>
+            </div>
+        </div>
+    </form>
+    <div id="content-from-menu" class="p-2 d-none justify-content-center align-item-center">
+        <div id="from-menu-selecteds" class="row justify-content-center"></div>
+    </div>
+</section>
 {% endblock %}

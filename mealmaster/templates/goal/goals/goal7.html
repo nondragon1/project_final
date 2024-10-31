@@ -1,117 +1,92 @@
 {% include "home/layout.html" %}
+{% include "goal/goals/goal_style.html" %}
 {% load static %}
 
 {%block content%}
 
-<style>
-
-.header{
- text-align: center;
- margin-top: 20px;
-}
-
-.header2{
- border: 5px solid black;
- border-radius: 20px;
- margin: 0 auto;
- width: 50%;
-}
-
-.photo{
- text-align: center;
-}
-
-h6{
- border: 5px solid black;
- border-radius: 30px;
- padding: 10px;
- text-align: center;
-}
-
-.container{
- margin-top: 30px;
-}
-
-.row{
- text-align: center;
-}
-
-</style>
-
-<div class="header">
-    <h1>Desired Result</h1>
-    <div class="header2">
-        <h2>Custom</h2>
-    </div>
-</div>
-
-<div class="photo">
-    <img src="{% static '/images/goal/Keto-Diet.png' %}" alt="pic-model" style="width: 300px ; height: 300px;margin-top: 30px;">
-</div>
-
-<div class="container">
-    <h6>Effective Eating for Weight Gain
-    </h6>
-    <br>
-    <p>Gaining weight in a healthy and sustainable way involves more than just eating more food. It's about choosing calorie-dense, 
-        nutrient-rich foods that help build muscle mass and increase body weight while maintaining good health. 
-        Here's a guide on how to achieve weight gain safely and effectively, including key principles and Thai food examples.</p>
-<br>
-<br>
-    <h6>Principles of Eating for Weight Gain</h6>
-    <br>
-    <p>Increase Caloric Intake: To gain weight, you need to consume more calories than your body burns. Gradually increase your caloric intake to avoid rapid fat gain.
-        High Protein: Protein is vital for muscle growth. Include high-protein foods like meat, eggs, beans, grains, and dairy in your meals.
-        Complex Carbohydrates: These provide steady energy and help build muscle mass. Examples include brown rice, whole wheat bread, potatoes, and pumpkin.
-        Healthy Fats: Fats from nuts, olive oil, and avocados provide a calorie boost and are essential for overall health.</p>
-    <br>
-    <br>
-    <h6>Additional Considerations for Weight Gain</h6>
-    <br>
-    <p>Portion Control: While increasing your caloric intake, focus on the quality of the food. Avoid overconsumption of unhealthy, 
-        low-nutrient foods like sugary snacks or fast food. Opt for nutrient-dense meals rich in protein and healthy fats.</p>
-    <br>
-    <p>Exercise with Weight Training: To avoid gaining excess fat, incorporate strength training into your routine. This helps ensure that 
-        the weight gained is primarily muscle mass, improving your overall body composition.</p>
-    <br>
-    <p>Eat More Frequently: Try eating smaller, calorie-dense meals throughout the day. 
-        Snack between meals on nutrient-rich foods to boost your calorie intake without feeling overly full.</p>
-    <br>
-    <p>Stay Hydrated: Drinking enough water helps digestion and nutrient absorption. 
-        However, avoid drinking large amounts of water right before meals, as it can make you feel full too quickly 
-        and reduce your food intake.</p>
-    <br>
-    <p>Monitor Your Progress: Regularly track your weight and body measurements to ensure that you are gaining muscle, not just fat. Adjust your diet and exercise plan as needed to meet your goals.</p>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <div class="row">
-        <div class="col-6 flex-column">
-            <a type="button" class="btn btn-secondary" href="{% url 'goal' %}" style="width: 400px;height: 50px;"><h4>return</h4></a>
-        </div>
-
-        <div class="col-6 flex-column">
-            <a type="button" class="btn btn-success" href="/detailgoalfat/{{ id_diet }}" style="width: 400px;height: 50px;"><h4>submit</h4></a>
+<div class="goal-content">
+    <div class="header">
+        <!-- <h1>Desired Result</h1> -->
+        <div class="header2">
+            <h2>Custom</h2>
         </div>
     </div>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
+    
+    <div class="photo">
+        <img src="{% static '/images/goal/Keto-Diet.png' %}" alt="pic-model">
+    </div>
+    
+    <div class="container">
+        <h6>Effective Eating for Weight Gain
+        </h6>
+        <br>
+        <p>Gaining weight in a healthy and sustainable way involves more than just eating more food. It's about choosing
+            calorie-dense,
+            nutrient-rich foods that help build muscle mass and increase body weight while maintaining good health.
+            Here's a guide on how to achieve weight gain safely and effectively, including key principles and Thai food
+            examples.</p>
+        <br>
+        <br>
+        <h6>Principles of Eating for Weight Gain</h6>
+        <br>
+        <p>Increase Caloric Intake: To gain weight, you need to consume more calories than your body burns. Gradually
+            increase your caloric intake to avoid rapid fat gain.
+            High Protein: Protein is vital for muscle growth. Include high-protein foods like meat, eggs, beans, grains, and
+            dairy in your meals.
+            Complex Carbohydrates: These provide steady energy and help build muscle mass. Examples include brown rice,
+            whole wheat bread, potatoes, and pumpkin.
+            Healthy Fats: Fats from nuts, olive oil, and avocados provide a calorie boost and are essential for overall
+            health.</p>
+        <br>
+        <br>
+        <h6>Additional Considerations for Weight Gain</h6>
+        <br>
+        <p>Portion Control: While increasing your caloric intake, focus on the quality of the food. Avoid overconsumption of
+            unhealthy,
+            low-nutrient foods like sugary snacks or fast food. Opt for nutrient-dense meals rich in protein and healthy
+            fats.</p>
+        <br>
+        <p>Exercise with Weight Training: To avoid gaining excess fat, incorporate strength training into your routine. This
+            helps ensure that
+            the weight gained is primarily muscle mass, improving your overall body composition.</p>
+        <br>
+        <p>Eat More Frequently: Try eating smaller, calorie-dense meals throughout the day.
+            Snack between meals on nutrient-rich foods to boost your calorie intake without feeling overly full.</p>
+        <br>
+        <p>Stay Hydrated: Drinking enough water helps digestion and nutrient absorption.
+            However, avoid drinking large amounts of water right before meals, as it can make you feel full too quickly
+            and reduce your food intake.</p>
+        <br>
+        <p>Monitor Your Progress: Regularly track your weight and body measurements to ensure that you are gaining muscle,
+            not just fat. Adjust your diet and exercise plan as needed to meet your goals.</p>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <div class="row" style="width: 100%;">
+            <div class="col-6 flex-column">
+                <a type="button" class="btn btn-secondary" href="{% url 'goal' %}" 
+                    style="width: 100%;height: 50px; display: flex; justify-content: center; align-items: center;">
+                    <h4 style="margin: 0;">return</h4>
+                </a>
+            </div>
+    
+            <div class="col-6 flex-column">
+                <a type="button" class="btn btn-success" href="/detailgoalfat/{{ id_diet }}"
+                    style="width: 100%;height: 50px; display: flex; justify-content: center; align-items: center;">
+                    <h4 style="margin: 0;">submit</h4>
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
-
-
 
 {% endblock %}

@@ -1,151 +1,120 @@
 {% include "home/layout.html" %}
+{% include "goal/goals/goal_style.html" %}
 {% load static %}
 
 {%block content%}
 
-<style>
-
-.header{
- text-align: center;
- margin-top: 20px;
-}
-
-.header2{
- border: 5px solid black;
- border-radius: 20px;
- margin: 0 auto;
- width: 50%;
-}
-
-.photo{
- text-align: center;
-}
-
-h6{
- border: 5px solid black;
- border-radius: 30px;
- padding: 10px;
- text-align: center;
-}
-
-.container{
- margin-top: 30px;
-}
-
-.row{
- text-align: center;
-}
-
-</style>
-
-<div class="header">
-    <h1>Desired Result</h1>
-    <div class="header2">
-        <h2>Mediterranean Diet</h2>
-    </div>
-</div>
-
-<div class="photo">
-    <img src="{% static '/images/goal/Mediterranean_Diet.jpg' %}" alt="pic-model" style="width: 300px ; height: 300px;margin-top: 30px;">
-</div>
-
-<div class="container">
-    <h6>What is Mediterranean Diet</h6>
-    <br>
-    <p>The Mediterranean Diet is not a fad diet but rather a balanced eating plan inspired by the food habits of people living 
-        around the Mediterranean Sea, including Spain, Italy, France, Greece, and Turkey. This diet emphasizes a high intake of fruits and 
-        vegetables, along with healthy fats and carbohydrates, primarily through olive oil and spices. It is known for aiding weight loss and
-        promoting overall health, reducing the risk of serious diseases like heart attacks and strokes.</p>
-<br>
-<br>
-    <h6> How to Start the Mediterranean Diet</h6>
-    <br>
-    <p>1. Focus on Fruits and Vegetables: Over half of your plate should consist of fresh fruits and vegetables. 
-        Salads drizzled with olive oil are common.</p>
-    <br>
-    <p>2. Emphasize Seafood: Fish is a key protein source,
-        rich in omega-3 fatty acids, which helps with fat metabolism and reduces heart disease risk.</p>
-    <br>
-    <p>3. Regular Exercise: Incorporate physical activity into your routine.</p>    
-    <br>
-    <br>
-    <h6>Dietary Proportions</h6>
-    <br>
-    <p>The Mediterranean diet is structured like a pyramid:</p>
-    <br>
-    <p>- Carbohydrates (50%): Prioritize whole grains and unrefined carbs from fruits and vegetables.</p>
-    <p>- Protein (15%): Focus on seafood, poultry, and eggs, limiting red meat to weekly servings.</p>
-    <p>- Healthy Fats (35%): Use olive oil and nuts daily in moderation.</p>
-    <p>- Dairy: Consume cheese, milk, and yogurt sparingly.</p>
-    <p>- Occasional Treats: Enjoy red meat and sweets occasionally.</p>
-    <br>
-    <br>
-    <h6>Recommended Foods and Drinks</h6>
-    <br>
-    <p>1. Vegetables: Tomatoes, leafy greens, carrots, cucumbers, and mushrooms, consumed fresh or sautéed in olive oil.</p>
-    <p>2. Fruits: Apples, bananas, watermelon, oranges, avocados, and pears.</p>
-    <p>3. Nuts and Seeds: Almonds, pistachios, chickpeas, cashews, sunflower seeds, and chia seeds.</p>
-    <p>4. Whole Grains: Oats, brown rice, barley, corn, and whole-grain bread and pasta.</p>
-    <p>5. Seafood: Tuna, salmon, shrimp, squid, and crab.</p>
-    <p>6. Healthy Fats: Extra virgin olive oil and avocado oil.</p>
-    <p>7. Other Foods: Fresh milk, yogurt, potatoes, and chicken, along with herbs like garlic and rosemary.</p>
-    <p>8. Water: Aim for at least 8 glasses daily, drinking some before meals.</p>
-    <p>9. Red Wine: One glass per day, unless avoiding alcohol is necessary.</p>
-    <p>10. Tea and Coffee: Consume without added sugar; milk is optional.</p>
-    <br>
-    <br>
-    <h6>Benefits of the Mediterranean Diet</h6>
-    <br>
-    <p>- Reduces overall body fat, including visceral fat.</p>
-    <p>- Lowers the risk of chronic diseases such as diabetes, heart disease, hypertension, and colorectal cancer.</p>
-    <p>- Aids gradual weight loss due to lower calorie intake.</p>
-    <p>- Improves digestive health through high fiber from fruits and vegetables.</p>
-    <p>- Reduces inflammation and the risk of cognitive decline.</p>
-    <p>- Promotes healthy, youthful skin due to antioxidants from produce.</p>
-    <p>- Supports longevity and overall well-being.</p>
-    <br>
-    <br>
-    <br>
-    <h6>Drawbacks of the Mediterranean Diet</h6>
-    <br>
-    <p>- Weight loss may be gradual, not rapid.</p>
-    <p>- Initial cravings for red meat may occur.</p>
-    <p>- Not suitable for those allergic to seafood.</p>
-    <p>- Risk of calcium and certain vitamin deficiencies due to limited dairy intake.</p>
-    <p>- Ingredients may be moderately to highly priced.</p>
-    <br>
-    <p>https://amara-clinic.com/mediterranean-diet/</p>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <div class="row">
-        <div class="col-6 flex-column">
-            <a type="button" class="btn btn-secondary" href="{% url 'goal' %}" style="width: 400px;height: 50px;"><h4>return</h4></a>
-        </div>
-
-        <div class="col-6 flex-column">
-            <a type="button" class="btn btn-success" href="/detailgoalfat/{{ id_diet }}" style="width: 400px;height: 50px;"><h4>submit</h4></a>
+<div class="goal-content">
+    <div class="header">
+        <!-- <h1>Desired Result</h1> -->
+        <div class="header2">
+            <h2>Mediterranean Diet</h2>
         </div>
     </div>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
+    
+    <div class="photo">
+        <img src="{% static '/images/goal/Mediterranean_Diet.jpg' %}" alt="pic-model">
+    </div>
+    
+    <div class="container">
+        <h6>What is Mediterranean Diet</h6>
+        <br>
+        <p>The Mediterranean Diet is not a fad diet but rather a balanced eating plan inspired by the food habits of people
+            living
+            around the Mediterranean Sea, including Spain, Italy, France, Greece, and Turkey. This diet emphasizes a high
+            intake of fruits and
+            vegetables, along with healthy fats and carbohydrates, primarily through olive oil and spices. It is known for
+            aiding weight loss and
+            promoting overall health, reducing the risk of serious diseases like heart attacks and strokes.</p>
+        <br>
+        <br>
+        <h6> How to Start the Mediterranean Diet</h6>
+        <br>
+        <p>1. Focus on Fruits and Vegetables: Over half of your plate should consist of fresh fruits and vegetables.
+            Salads drizzled with olive oil are common.</p>
+        <br>
+        <p>2. Emphasize Seafood: Fish is a key protein source,
+            rich in omega-3 fatty acids, which helps with fat metabolism and reduces heart disease risk.</p>
+        <br>
+        <p>3. Regular Exercise: Incorporate physical activity into your routine.</p>
+        <br>
+        <br>
+        <h6>Dietary Proportions</h6>
+        <br>
+        <p>The Mediterranean diet is structured like a pyramid:</p>
+        <br>
+        <p>- Carbohydrates (50%): Prioritize whole grains and unrefined carbs from fruits and vegetables.</p>
+        <p>- Protein (15%): Focus on seafood, poultry, and eggs, limiting red meat to weekly servings.</p>
+        <p>- Healthy Fats (35%): Use olive oil and nuts daily in moderation.</p>
+        <p>- Dairy: Consume cheese, milk, and yogurt sparingly.</p>
+        <p>- Occasional Treats: Enjoy red meat and sweets occasionally.</p>
+        <br>
+        <br>
+        <h6>Recommended Foods and Drinks</h6>
+        <br>
+        <p>1. Vegetables: Tomatoes, leafy greens, carrots, cucumbers, and mushrooms, consumed fresh or sautéed in olive oil.
+        </p>
+        <p>2. Fruits: Apples, bananas, watermelon, oranges, avocados, and pears.</p>
+        <p>3. Nuts and Seeds: Almonds, pistachios, chickpeas, cashews, sunflower seeds, and chia seeds.</p>
+        <p>4. Whole Grains: Oats, brown rice, barley, corn, and whole-grain bread and pasta.</p>
+        <p>5. Seafood: Tuna, salmon, shrimp, squid, and crab.</p>
+        <p>6. Healthy Fats: Extra virgin olive oil and avocado oil.</p>
+        <p>7. Other Foods: Fresh milk, yogurt, potatoes, and chicken, along with herbs like garlic and rosemary.</p>
+        <p>8. Water: Aim for at least 8 glasses daily, drinking some before meals.</p>
+        <p>9. Red Wine: One glass per day, unless avoiding alcohol is necessary.</p>
+        <p>10. Tea and Coffee: Consume without added sugar; milk is optional.</p>
+        <br>
+        <br>
+        <h6>Benefits of the Mediterranean Diet</h6>
+        <br>
+        <p>- Reduces overall body fat, including visceral fat.</p>
+        <p>- Lowers the risk of chronic diseases such as diabetes, heart disease, hypertension, and colorectal cancer.</p>
+        <p>- Aids gradual weight loss due to lower calorie intake.</p>
+        <p>- Improves digestive health through high fiber from fruits and vegetables.</p>
+        <p>- Reduces inflammation and the risk of cognitive decline.</p>
+        <p>- Promotes healthy, youthful skin due to antioxidants from produce.</p>
+        <p>- Supports longevity and overall well-being.</p>
+        <br>
+        <br>
+        <br>
+        <h6>Drawbacks of the Mediterranean Diet</h6>
+        <br>
+        <p>- Weight loss may be gradual, not rapid.</p>
+        <p>- Initial cravings for red meat may occur.</p>
+        <p>- Not suitable for those allergic to seafood.</p>
+        <p>- Risk of calcium and certain vitamin deficiencies due to limited dairy intake.</p>
+        <p>- Ingredients may be moderately to highly priced.</p>
+        <br>
+        <p>https://amara-clinic.com/mediterranean-diet/</p>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <div class="row" style="width: 100%;">
+            <div class="col-6 flex-column">
+                <a type="button" class="btn btn-secondary" href="{% url 'goal' %}" 
+                    style="width: 100%;height: 50px; display: flex; justify-content: center; align-items: center;">
+                    <h4 style="margin: 0;">return</h4>
+                </a>
+            </div>
+    
+            <div class="col-6 flex-column">
+                <a type="button" class="btn btn-success" href="/detailgoalfat/{{ id_diet }}"
+                    style="width: 100%;height: 50px; display: flex; justify-content: center; align-items: center;">
+                    <h4 style="margin: 0;">submit</h4>
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
-
-
 
 {% endblock %}

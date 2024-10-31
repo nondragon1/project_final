@@ -5,62 +5,72 @@
 
 <style>
 
-.header{
- text-align: center;
- margin-top: 30px;
-}
+    body {
+        background-image: url("{% static '/images/food_menu.jpg' %}");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
 
-.pic-food{
- text-align: center;
- margin-top: 30px;
-}
+    .header {
+        text-align: center;
+        margin-top: 30px;
+    }
 
-.row{
- text-align: center;
-}
+    .pic-food {
+        text-align: center;
+        margin-top: 30px;
+    }
 
+    .row {
+        text-align: center;
+    }
 </style>
 
-<div class="container">
+<div class="container content-layout-3">
     <div class="pic-food">
         <img src="{{ '/media/thaimenu/'|add:url_image }}" alt="food-pic" style="width: 80% ;">
     </div>
-        <br>
-        <br>
-        <br>
-        <form method="POST" action="/detailfood/add/menu/">
-            {% csrf_token %}
-            <div class="card-body">
+    <form method="POST" action="/detailfood/add/menu/">
+        {% csrf_token %}
+        <div class="card-body">
+            <div>
                 <div>
-                    <input oninput="calculateCal(this , '{{calorie}}')" placeholder="{% if menu_id == 49 %}Number of gram{% else %}Number of bowls{% endif %}" type="text" required name="number" class="form-control" onkeypress="return isNumberKey(event)"/>
-                    <input hidden name="menu_id" value="{{menu_id}}"/>
-                    <input hidden id="calorie" value="{{calorie}}"/>
-                    <div class="form-control mt-1" id="calorie-calculate">
-                        <span>Calorie : </span>
-                        <span id="calorie-value">0</span>
-                    </div>
+                    <div>ช่องที่ 1 กรอกวันที่กิน</div>
+                    <div>ช่องที่ 2 กรอกเวลากิน(ระบุเป็นรูปแบบ 24 ชม. เช่น 13:00)</div>
+                    <div>ช่องที่ 3 กรอกจำนวนจาน(สามารถใส่ทศนิยมได้)</div>
                 </div>
-                <div class="row mt-2">
-                    <div class="col-6 flex-column">
-                        <a type="button" class="btn btn-secondary" href="/" style="width: 400px;height: 50px;"><h4>return</h4></a>
-                    </div>
-            
-                    <div class="col-6 flex-column">
-                        <button type="submit" class="btn btn-success" href="" style="width: 400px;height: 50px;"><h4>submit</h4></button>
-                    </div>
+                <input id="datepicker" placeholder="เลือกวันที่" type="text" class="form-control"
+                    style="background-color: white;" name="date" />
+                <input id="timeInput" placeholder="Time of day eat" required class="form-control" name="time"
+                    type="time" />
+                <input oninput="calculateCal(this , '{{calorie}}')"
+                    placeholder="{% if menu_id == 49 %}Number of gram{% else %}Number of bowls{% endif %}" type="text"
+                    required name="number" class="form-control mt-1" onkeypress="return isNumberKey(event)" />
+                <input hidden name="menu_id" value="{{menu_id}}" />
+                <input hidden id="calorie" value="{{calorie}}" />
+                <div class="form-control mt-1" id="calorie-calculate">
+                    <span>Calorie : </span>
+                    <span id="calorie-value">0</span>
                 </div>
             </div>
-        </form>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
+            <div class="row mt-2">
+                <div class="col-6 flex-column">
+                    <a type="button" class="btn btn-secondary w-100" href="/">
+                        <h4>return</h4>
+                    </a>
+                </div>
+
+                <div class="col-6 flex-column">
+                    <button type="submit" class="btn btn-success w-100">
+                        <h4>submit</h4>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
 <script>
-    function calculateCal(ev , calorie) {
+    function calculateCal(ev, calorie) {
         const calorieCalculate = document.getElementById("calorie-calculate")
         const calculate = ev.value * calorie
         calorieCalculate.querySelector("#calorie-value").innerHTML = calculate
@@ -82,6 +92,81 @@
         }
         return true;
     }
+
+    $(document).ready(function () {
+        const dateInput = document.getElementById('datepicker');
+        const timeInput = document.getElementById('timeInput');
+
+        const now = new Date();
+        const year = now.getFullYear()
+        const month = String(now.getMonth() + 1).padStart(2, '0')
+        const day = String(now.getDate()).padStart(2, '0')
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+
+        dateInput.value = `${year}-${month}-${day}`
+        timeInput.value = `${hours}:${minutes}`;
+
+        // datePicker
+        function convertToBuddhistYear(instance) {
+            const currentYearElement = instance.currentYearElement;
+            let currentYear = parseInt(currentYearElement.value);
+            currentYearElement.value = currentYear + 543;
+        }
+
+        function goToToday(instance) {
+            instance.setDate(new Date());
+            convertToBuddhistYear(instance);
+        }
+
+        flatpickr("#datepicker", {
+            disableMobile: true,
+            dateFormat: "Y-m-d",
+            locale: "th",
+            onReady: function (selectedDates, dateStr, instance) {
+                convertToBuddhistYear(instance);
+
+                const currentButton = document.createElement("button");
+                currentButton.innerText = "กลับไปยังวันปัจจุบัน";
+                currentButton.classList.add("flatpickr-current-button");
+                currentButton.classList.add("btn");
+                currentButton.classList.add("btn-dark");
+                currentButton.classList.add("w-100");
+                currentButton.addEventListener("click", function () {
+                    goToToday(instance);
+                });
+
+                instance.calendarContainer.appendChild(currentButton);
+            },
+            onChange: function (selectedDates, dateStr, instance) {
+                convertToBuddhistYear(instance);
+            },
+            onMonthChange: function (selectedDates, dateStr, instance) {
+                convertToBuddhistYear(instance);
+            },
+            onYearChange: function (selectedDates, dateStr, instance) {
+                convertToBuddhistYear(instance);
+            },
+            onOpen: function (selectedDates, dateStr, instance) {
+                const prevMonthButton = instance.calendarContainer.querySelector(".flatpickr-prev-month");
+                const nextMonthButton = instance.calendarContainer.querySelector(".flatpickr-next-month");
+
+                if (prevMonthButton && nextMonthButton) {
+                    prevMonthButton.addEventListener('click', function () {
+                        setTimeout(function () {
+                            convertToBuddhistYear(instance);
+                        }, 1);
+                    });
+
+                    nextMonthButton.addEventListener('click', function () {
+                        setTimeout(function () {
+                            convertToBuddhistYear(instance);
+                        }, 1);
+                    });
+                }
+            },
+        })
+    })
 </script>
 
 {% endblock %}

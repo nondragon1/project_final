@@ -1,10 +1,11 @@
 {% load static %}
 <html>
+
 <head>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- ------------------------------ -->
   <meta charset="UTF-8">
   <link rel="stylesheet" href="styles.css">
@@ -16,9 +17,6 @@
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
-      /* background: url("/static/images/BG2.jpg") no-repeat center fixed;
-  background-size: cover; */
-
     }
 
     .navbar {
@@ -39,6 +37,7 @@
       padding: 15px 15px;
       text-decoration: none;
       font-size: 25px;
+      position: relative;
     }
 
     .navbar a:hover {
@@ -74,17 +73,43 @@
     }
 
 
-    .profileI {
+    .profileImage {
       /* padding: 20px; */
       margin: 20px;
     }
 
     .main {
+      width: 100%;
       text-align: center;
     }
 
-    h1 {
-      margin-top: 20px;
+    .main .banner-title {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .main .banner-title .text-title {
+      padding: 2px 4px;
+      background-color: black;
+      color: #ffff00;
+      border-radius: 5px;
+      border: 2px solid #ffff00;
+    }
+
+    .main .banner-title a {
+      padding: 0;
+      width: 100%;
+    }
+
+    .main .banner-title a h6 {
+      margin: 0;
+    }
+
+    .main .banner-title-space {
+      color: transparent;
     }
 
     h6 {
@@ -102,7 +127,8 @@
 
     .notification_wrap {
       /* margin: 50px auto 0; */
-      margin-top: 50px;
+      position: relative;
+      margin: 20px;
       text-align: center;
     }
 
@@ -115,6 +141,9 @@
       text-align: center;
       /* color: #605dff; */
       color: #000000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .notification_wrap .notification_icon:hover {
@@ -126,7 +155,8 @@
     }
 
     .notification_wrap .dropdown {
-      width: 350px;
+      width: 80vw;
+      max-width: 350px;
       height: auto;
       background: #fff;
       border-radius: 5px;
@@ -135,6 +165,7 @@
       padding: 15px;
       position: absolute;
       display: none;
+      z-index: 999;
     }
 
     .notification_wrap .dropdown .notify_item {
@@ -166,18 +197,99 @@
       font-size: 12px;
     }
 
-    .notification_wrap .dropdown:before {
+    /* .notification_wrap .dropdown:before {
       content: "";
       position: absolute;
       top: -30px;
-      left: 50%;
+      right: -10px;
       transform: translateX(-50%);
       border: 15px solid;
       border-color: transparent transparent #fff transparent;
-    }
+    } */
 
     .notification_wrap .dropdown.active {
       display: block;
+    }
+
+    .barcode-container img {
+      width: 30px;
+      height: 30px;
+    }
+
+    .image-profile {
+      max-width: 100px;
+      min-width: 42px;
+      width: 100%;
+      aspect-ratio: 1/1;
+    }
+
+    @media only screen and (max-width: 600px) {
+
+      .banner-title {
+        font-size: 25px;
+      }
+
+      .banner-title h6 {
+        font-size: 25px;
+      }
+
+      .barcode-container img {
+        width: 20px;
+        height: 20px;
+      }
+
+      .navbar input[type=text],
+      .navbar .search-container button {
+        font-size: 12px;
+      }
+
+      .navbar .search-container button {
+        padding: 10px;
+      }
+
+      .navbar a {
+        padding: 15px 10px;
+        font-size: 18px;
+      }
+    }
+
+    @media only screen and (max-width: 400px) {
+      .banner-title {
+        font-size: 20px;
+      }
+
+      .banner-title h6 {
+        font-size: 20px;
+      }
+
+      .navbar a {
+        padding: 15px 10px;
+        font-size: 14px;
+      }
+    }
+
+    @media only screen and (max-width: 300px) {
+
+      .banner-title {
+        font-size: 16px;
+      }
+
+      .banner-title h6 {
+        font-size: 16px;
+      }
+
+      .navbar input[type=text] {
+        width: 100px;
+      }
+
+      .navbar a {
+        padding: 15px 8px;
+        font-size: 12px;
+      }
+
+      .fas.fa-bell {
+        font-size: 28px;
+      }
     }
 
     /* ---------------------- */
@@ -189,16 +301,14 @@
   <div class="navbar" style="padding-top: 0px;padding-bottom: 0px;">
     <!-- <a href="#" class="active">Home</a> -->
     <div class="search-container">
-      <form action="/">
-        <div class="barcode-container">
-          <a href="/"><img src="{% static '/images/barcodelogo.png' %}" alt="barcodelogo" width="30px" height="30px"></a>
-        </div>
+      <form action="{% url 'search' %}">
         {% if request.user.customer.cost == 'Gold' and request.user.customer.diet %}
         <div class="barcode-container">
-          <a href="/predict"><img src="{% static '/images/scan.jpg' %}" alt="barcodelogo" width="30px" height="30px"></a>
+          <a href="/predict"><img src="{% static '/images/scan.jpg' %}" alt="barcodelogo"
+              style="max-width: 30px;max-height: 30px;"></a>
         </div>
         {% endif %}
-        <input type="text" placeholder="Search.." name="search">
+        <input class="input-search" type="text" placeholder="Search.." name="s" value="{{ request.GET.s }}">
         <button type="submit"><i class="fa fa-search"></i></button>
       </form>
     </div>
@@ -208,7 +318,6 @@
     <a href="/">Home</a>
     <a href="{% url 'goal' %}">Goal</a>
     <a href="{% url 'diary' %}">Diary</a>
-    <a href="{% url 'feed' %}">Feed</a>
     <a href="{% url 'admin:index' %}">Admin</a>
     <a href="{% url 'logout' %}">Log out</a>
     {% endif %}
@@ -216,14 +325,12 @@
     <a href="/">Home</a>
     <a href="{% url 'goal' %}">Goal</a>
     <a href="{% url 'diary' %}">Diary</a>
-    <a href="{% url 'feed' %}">Feed</a>
     <a href="{% url 'logout' %}">Log out</a>
     {% endif %}
     {% if request.user.customer.cost == 'Normal' %}
     <a href="/">Home</a>
     <a href="{% url 'goal' %}">Goal</a>
     <a href="{% url 'diary' %}">Diary</a>
-    <a href="{% url 'feed' %}">Feed</a>
     <a href="{% url 'logout' %}">Log out</a>
     {% endif %}
 
@@ -234,49 +341,55 @@
   </div>
 
   <div class="main">
-    <div class="row">
-      <div class="col-4 flex-column">
-        <div class="profileI">
-          <a href="{% url 'profile' %}"><img src="{% static '/images/usercat.png' %}" alt="Avatar" width="100px"
-              height="100px" style="border-radius: 50%;"></a>
+    <div class="d-flex justify-content-between w-100">
+      <div class="d-flex justify-content-center align-items-center">
+        <div class="profileImage">
+          <a href="{% url 'profile' %}">
+            {% if request.user.customer.cost == 'admin' %}
+            <img src="{% static '/images/usercat.png' %}" alt="Avatar" class="image-profile"
+              style="border-radius: 50%;">
+            {% else %}
+            {% if request.user.customer.image %}
+            <img src="{{ request.user.customer.image.url }}" alt="Avatar" class="image-profile"
+              style="border-radius: 50%;">
+            {% else %}
+            <img src="{% static '/images/MMI_LOGO.png' %}" alt="Avatar" class="image-profile"
+              style="border-radius: 50%;">
+            {% endif %}
+            {% endif %}
+          </a>
         </div>
       </div>
 
-      <div class="col-4 flex-column">
-        <h1>MEAL MASTER</h1>
-        {% if request.user.customer.cost == 'Normal' %}
-        <a class="btn" href="{% url 'upgrade' %}">
-          <h6 type="button"><img src="{% static '/images/kinglogo.png' %}" alt="kinglogo" width="30px"
-              height="30px">Upgrade Gold User</h6>
-        </a>
-        {% endif %}
+      <div class="d-flex justify-content-center align-items-center flex-column">
+        <h1 class="banner-title">
+          <span class="text-title">MEAL MASTER</span>
+          {% if request.user.customer.cost == 'Normal' %}
+          <a class="btn" href="{% url 'upgrade' %}">
+            <h6 type="button">
+              <img src="{% static '/images/kinglogo.png' %}" alt="kinglogo" width="30px" height="30px">Upgrade Gold User
+            </h6>
+          </a>
+          {% endif %}
+        </h1>
+        <!-- <h1 class="banner-title-space">MEAL MASTER</h1> -->
       </div>
 
-      <div class="col-4 flex-column">
-        <!-- <a href="/"><img src="{% static '/images/notificationlogo.png' %}" alt="notificatelogo" width="80px" height="80px" style="margin-top: 40px;"></a> -->
+      <div class="d-flex justify-content-center align-items-center" style="width: 140px;">
         <div class="wrapper">
           <div class="notification_wrap">
             <div class="notification_icon">
-              <i class="fas fa-bell" id="icon-notify"></i>
+              <i class="fas fa-bell position-relative">
+                <span id="icon-notify" style="bottom: -8; right: -8;"></span>
+              </i>
               <form id="form-notify">
                 {% csrf_token %}
               </form>
             </div>
             <div class="dropdown" id="notify-dropdown">
-              <!-- <div class="notify_item">
-                <div class="notify_img">
-                  <img src="{% static '/images/usercat.png' %}" alt="profile_pic" style="width: 50px">
-                </div>
-                <div class="notify_info">
-                  <p>Alex commented on<span>Timeline Share</span></p>
-                  <span class="notify_time">10 minutes ago</span>
-                </div>
-              </div>
-               -->
             </div>
           </div>
         </div>
-
       </div>
 
     </div>
@@ -292,26 +405,51 @@
     $(document).ready(function () {
       let id_unread;
 
-      $(".notification_icon .fa-bell").click(function () {
+      $(".notification_icon .fa-bell").click(function (event) {
+        const popup = document.querySelector(".dropdown")
+        const icon = event.target;
+
+        const iconRect = icon.getBoundingClientRect();
+
+        let popupX = iconRect.left;
+
+        const right = window.innerWidth - popupX - 50
+        popup.style.right = `${right}`;
+
         $(".dropdown").toggleClass("active");
 
         const form = document.getElementById("form-notify")
         const formData = new FormData(form)
-        formData.append("id_unread" , id_unread)
-        fetch("/update-status/" , {
-          method : "POST",
-          body : formData
+        formData.append("id_unread", id_unread)
+        fetch("/update-status/", {
+          method: "POST",
+          body: formData
         })
 
-        document.getElementById("icon-notify").removeAttribute("style")
+        $("#icon-notify").removeAttr("class")
       })
 
       function timeAgo(targetTime) {
         const now = new Date();
         const diffMs = now - new Date(targetTime);
-        const diffMinutes = Math.floor(diffMs / (1000 * 60));
 
-        return `${diffMinutes} minutes ago`;
+        const diffMinutes = Math.floor(diffMs / (1000 * 60));
+        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        const diffMonths = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 30.44)); // Approximate months
+        const diffYears = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 365.25)); // Approximate years
+
+        if (diffMinutes < 60) {
+          return `${diffMinutes} minute${diffMinutes === 1 ? '' : 's'} ago`;
+        } else if (diffHours < 24) {
+          return `${diffHours} hour${diffHours === 1 ? '' : 's'} ago`;
+        } else if (diffDays < 30) {
+          return `${diffDays} day${diffDays === 1 ? '' : 's'} ago`;
+        } else if (diffMonths < 12) {
+          return `${diffMonths} month${diffMonths === 1 ? '' : 's'} ago`;
+        } else {
+          return `${diffYears} year${diffYears === 1 ? '' : 's'} ago`;
+        }
       }
 
       async function updateNotify() {
@@ -335,8 +473,8 @@
 
         document.getElementById("notify-dropdown").innerHTML = notify_list
 
-        if(data.count !== 0) {
-          document.getElementById("icon-notify").style.color = "red"
+        if (data.count !== 0) {
+          $("#icon-notify").attr("class", "position-absolute p-2 bg-danger border border-light rounded-circle")
         }
 
         id_unread = data.id_unreads
